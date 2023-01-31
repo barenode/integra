@@ -2,6 +2,7 @@ package com.example.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.ToString;
 
 import java.time.OffsetDateTime;
 
@@ -43,6 +44,7 @@ import java.time.OffsetDateTime;
  * }
  */
 @Data
+@ToString
 public class SplunkRecord {
     private SplunkRecord.Result result;
 
@@ -59,5 +61,31 @@ public class SplunkRecord {
         private String httpStatus;
         private String event;
         private String message;
+        private String target;
+
+        public String getBaseIdent() {
+            return String.format("%s:%s:%s", serviceName, traceId, spanId);
+        }
+
+        public String getIdent() {
+            return String.format("%s:%s:%s:%s", serviceName, traceId, spanId, event);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s:%s:%s:%s", serviceName, spanId, event, message);
+//            return "Result{" +
+//                    "timestamp=" + timestamp +
+//                    ", traceId='" + traceId + '\'' +
+//                    ", spanId='" + spanId + '\'' +
+//                    ", serviceName='" + serviceName + '\'' +
+//                    ", httpMethod='" + httpMethod + '\'' +
+//                    ", httpStatus='" + httpStatus + '\'' +
+//                    ", event='" + event + '\'' +
+//                    ", message='" + message + '\'' +
+//                    '}';
+        }
     }
+
+
 }
