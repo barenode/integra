@@ -1,37 +1,21 @@
 openapi: 3.0.3
 info:
-  title: Library API - OpenAPI 3.0
+  title: Integra API - OpenAPI 3.0
   description: |-
-    This is a sample Library Server based on the OpenAPI 3.0 specification.  You can find out more about
-    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the Library, we've switched to the design first approach!
-    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
-    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
-    
-    Some useful links:
-    - [The library repository](https://github.com/anicetkeric/spring-reactive-openapi-codegen)
-    - [The source API definition for the library](https://github.com/anicetkeric/spring-reactive-openapi-codegen/blob/main/src/main/resources/openapi/yaml/library-openapi.yaml)
+    This is ....
   termsOfService: http://swagger.io/terms/
   contact:
-    email: boottechnologies.ci@gmail.com
+    email: frantisek.hylmar@gmail.com
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: '1.0.11'
 
-tags:
-  - name: Book
-    description: Operations about book
-    externalDocs:
-      description: Find out more
-      url: http://swagger.io
-
 paths:
-  /book:
+  /find/{id}:
     get:
-      tags:
-        - Book
-      summary: Get all list book
-      operationId: getAllBook
+      summary: Finds single report
+      operationId: find
       responses:
         '200':
           description: return successfully
@@ -75,56 +59,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /book/{id}:
-    get:
-      tags:
-        - Book
-      summary: get the "id" author.
-      description: Returns a single record
-      operationId: getOneBook
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        "401":
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        "405":
-          description: Method Not Allowed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        "404":
-          description: entity by id not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse'
+
 components:
   schemas:
     ErrorResponse:
@@ -145,10 +80,18 @@ components:
           type: object
         message:
           type: string
-    Book:
+    Report:
+      type: object
+      properties:
+        spans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
+    Span:
       required:
-        - title
-        - isbn
+        - id
+        - traceId
+        - serviceName
       type: object
       properties:
         id:
