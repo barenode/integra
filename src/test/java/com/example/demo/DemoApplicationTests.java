@@ -32,7 +32,7 @@ class DemoApplicationTests {
 		Files.lines(Path.of("/tmp/session.json"))
 			.map(this::parseRecord)
 			.map(SplunkRecord::getResult)
-			.sorted(COMPARATOR)
+			.sorted(Comparator.comparing(SplunkRecord.Result::getTimestamp))
 			.filter(r -> r.getTraceId() != null)
 			//.map(r -> String.format("%s %s %s %s %s %s /t/t %s", r.getTimestamp(), r.getServiceName(), r.getTraceId(), r.getSpanId(), r.getHttpMethod(), r.getHttpStatus(), r.getMessage()))
 			.collect(
@@ -61,42 +61,34 @@ class DemoApplicationTests {
 		}
 	}
 
-	private static Comparator<SplunkRecord.Result> COMPARATOR = (d1, d2) -> d1.getTimestamp().compareTo(d2.getTimestamp());
-
-	private static final class SplunkRecordAggregator {
-
-	}
-
 	@Slf4j
 	private static final class SplunkRecordCollector implements Collector<SplunkRecord.Result, SplunkRecordAggregator, SplunkRecordAggregator> {
-
 		@Override
 		public Supplier<SplunkRecordAggregator> supplier() {
 			return SplunkRecordAggregator::new;
 		}
-
 		@Override
 		public BiConsumer<SplunkRecordAggregator, SplunkRecord.Result> accumulator() {
-			return (a, r) -> {
-				log.info("accumulating {} ", r);
-			};
+			return SplunkRecordAggregator::add;
 		}
-
 		@Override
 		public BinaryOperator<SplunkRecordAggregator> combiner() {
-			return (a, r) -> {
-				throw new UnsupportedOperationException();
-			};
+			return (a, b) -> a;
 		}
-
 		@Override
 		public Function<SplunkRecordAggregator, SplunkRecordAggregator> finisher() {
 			return Function.identity();
 		}
-
 		@Override
 		public Set<Characteristics> characteristics() {
 			return Collections.emptySet();
+		}
+	}
+
+	private static final class SplunkRecordAggregator {
+
+		public void add(SplunkRecord.Result span) {
+
 		}
 	}
 }
