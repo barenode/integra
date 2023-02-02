@@ -1,10 +1,13 @@
 package com.example.demo.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 
 /**
  * {
@@ -62,6 +65,8 @@ public class SplunkRecord {
         private String event;
         private String message;
         private String target;
+        @JsonProperty("_raw")
+        private String raw;
 
         public String getBaseIdent() {
             return String.format("%s:%s:%s", serviceName, traceId, spanId);
@@ -71,9 +76,14 @@ public class SplunkRecord {
             return String.format("%s:%s:%s:%s", serviceName, traceId, spanId, event);
         }
 
+        @JsonProperty("payload-json")
+        public void setPayloadJson(Map data) {
+            System.out.println("!!!!!!!!!!!" + data);
+        }
+
         @Override
         public String toString() {
-            return String.format("%s:%s:%s:%s", serviceName, spanId, event, message);
+            return String.format("%s:%s:%s:%s:%s:%s", timestamp, serviceName, traceId, spanId, event, message);
 //            return "Result{" +
 //                    "timestamp=" + timestamp +
 //                    ", traceId='" + traceId + '\'' +
@@ -84,6 +94,10 @@ public class SplunkRecord {
 //                    ", event='" + event + '\'' +
 //                    ", message='" + message + '\'' +
 //                    '}';
+        }
+
+        public boolean isRaw() {
+            return false;//spanId == null && raw != null;
         }
     }
 

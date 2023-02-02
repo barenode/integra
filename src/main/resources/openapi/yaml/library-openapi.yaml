@@ -12,7 +12,7 @@ info:
   version: '1.0.11'
 
 paths:
-  /find/{id}:
+  /find:
     get:
       summary: Finds single report
       operationId: find
@@ -76,10 +76,8 @@ components:
     SuccessResponse:
       type: object
       properties:
-        data:
-          type: object
-        message:
-          type: string
+        report:
+          $ref: '#/components/schemas/Report'
     Report:
       type: object
       properties:
@@ -89,31 +87,24 @@ components:
             $ref: '#/components/schemas/Span'
     Span:
       required:
-        - id
+        - spanId
         - traceId
         - serviceName
       type: object
       properties:
-        id:
+        spanId:
           type: string
-        title:
-          maxLength: 255
-          minLength: 1
+        traceId:
           type: string
-          description: book title
-        isbn:
-          maxLength: 13
-          minLength: 10
+        serviceName:
           type: string
-          description: International Standard Book Number
-        page:
-          type: integer
-          description: number of page
-        description:
+        httpStatus:
           type: string
-          description: book summary
-        price:
-          type: number
-          format: float
-          description: book price
-
+        httpMethod:
+          type: string
+        label:
+          type: string
+        childSpans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
