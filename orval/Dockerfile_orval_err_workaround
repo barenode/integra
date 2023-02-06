@@ -1,0 +1,6 @@
+FROM nginx:alpine
+
+WORKDIR /app
+
+COPY ./schema .
+COPY ./orval_err_workaround_nginx.conf /etc/nginx/nginx.conf

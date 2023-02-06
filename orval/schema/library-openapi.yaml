@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: Integra API - OpenAPI 3.0
+  description: |-
+    This is ....
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: frantisek.hylmar@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: '1.0.11'
+
+paths:
+  /find:
+    get:
+      summary: Finds single report
+      operationId: find
+      responses:
+        '200':
+          description: return successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: You are not authorized to view the resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Accessing the resource you were trying to reach is forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The resource you were trying to reach is not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: 'something went wrong! '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        description:
+          type: string
+        errors:
+          type: object
+    SuccessResponse:
+      type: object
+      properties:
+        report:
+          $ref: '#/components/schemas/Report'
+    Report:
+      type: object
+      properties:
+        spans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
+    Span:
+      required:
+        - spanId
+        - traceId
+        - serviceName
+      type: object
+      properties:
+        spanId:
+          type: string
+        traceId:
+          type: string
+        serviceName:
+          type: string
+        httpStatus:
+          type: string
+        httpMethod:
+          type: string
+        label:
+          type: string
+        childSpans:
+          type: array
+          items:
+            $ref: '#/components/schemas/Span'
