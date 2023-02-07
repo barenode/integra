@@ -13,6 +13,7 @@
 		<java.version>17</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-boot.version>3.0.2</spring-boot.version>
 		<openapi-generator-maven-plugin-version>6.2.1</openapi-generator-maven-plugin-version>
 		<swagger-annotations-version>2.2.6</swagger-annotations-version>
@@ -93,6 +94,7 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot.version}</version>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -142,30 +144,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.0.2</version>
-				<executions>
-					<execution>
-						<id>copy-openapi-schema</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/orval/schema</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/src/main/resources/openapi/yaml</directory>
-									<includes>
-										<include>*</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${docker-maven-plugin.version}</version>
@@ -174,7 +152,7 @@
 						<image>
 							<name>integra-orval-err-workaround:${project.version}</name>
 							<build>
-								<contextDir>${basedir}/orval</contextDir>
+								<contextDir>${basedir}/frontend/orval</contextDir>
 								<dockerFile>Dockerfile_orval_err_workaround</dockerFile>
 							</build>
 							<run>
@@ -194,7 +172,6 @@
 							<goal>start</goal>
 						</goals>
 					</execution>
-					<!--
 					<execution>
 						<id>stop</id>
 						<phase>compile</phase>
@@ -202,7 +179,6 @@
 							<goal>stop</goal>
 						</goals>
 					</execution>
-					-->
 				</executions>
 			</plugin>
 			<plugin>
@@ -229,6 +205,16 @@
 							<goal>yarn</goal>
 						</goals>
 						<phase>generate-resources</phase>
+					</execution>
+					<execution>
+						<id>yarn generate-api</id>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+						<phase>generate-resources</phase>
+						<configuration>
+							<arguments>generate-api</arguments>
+						</configuration>
 					</execution>
                     <!--
 					<execution>
@@ -261,6 +247,24 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>3.1.0</version>
 				<executions>
+					<execution>
+						<id>copy-openapi-schema</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/frontend/orval/schema</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/openapi/yaml</directory>
+									<includes>
+										<include>*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 					<execution>
 						<id>copy-resources</id>
 						<phase>process-classes</phase>
