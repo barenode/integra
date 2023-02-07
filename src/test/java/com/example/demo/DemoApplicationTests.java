@@ -62,7 +62,7 @@ class DemoApplicationTests {
 
 	@Test
 	void contextLoads() throws Exception {
-		Files.lines(Path.of("/tmp/sess-user.json"))
+		Files.lines(Path.of("/tmp/session_2.json"))
 			.map(this::parseRecord)
 			.map(SplunkRecord::getResult)
 			.filter(r -> r.getTimestamp() != null)
@@ -330,8 +330,8 @@ class DemoApplicationTests {
 		public void print(String indent) {
 			System.out.println(String.format(
 				"%s %s %s:%s", indent, type, request, response));
-			System.out.println(String.format("\t  %s %s", indent, getRequestPayload()));
-			System.out.println(String.format("\t  %s %s", indent, getResponsePayload()));
+//			System.out.println(String.format("\t  %s %s", indent, getRequestPayload()));
+//			System.out.println(String.format("\t  %s %s", indent, getResponsePayload()));
 			Optional.ofNullable(children).orElse(Collections.emptyList()).forEach(ch -> ch.print(indent + "\t"));
 		}
 

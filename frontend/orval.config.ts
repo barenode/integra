@@ -1,20 +1,19 @@
 import { defineConfig } from 'orval';
 
 export default defineConfig({
-  petstore: {
+  api: {
     output: {
       mode: 'split',
-      target: 'src/api/endpoints/petstoreFromFileSpecWithTransformer.ts',
-      schemas: 'src/api/model',
+      target: 'src/api.ts',
+      schemas: 'src/model',
       client: 'react-query',
       mock: false,
       override: {
-        query: {
-          useQuery: true,
-          useInfinite: true,
-          useInfiniteQueryParam: 'limit',
-        },
-      },
+        mutator: {
+          path: './src/custom-instance.ts',
+          name: 'customInstance',
+        }
+      }
     },
     input: {
       target: 'http://localhost:7777/library-openapi.yaml'

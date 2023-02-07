@@ -1,30 +1,18 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { useQuery } from 'react-query'
+import { useFind } from './api'
 
 function App() {
   
-  const { isLoading, error, data } = useQuery('repoData', () =>
-     fetch('https://api.github.com/repos/tannerlinsley/react-query').then(res =>
-       res.json()
-     )
-   );
- 
-  //  if (isLoading) return 'Loading...';
- 
-  //  if (error) return 'An error has occurred: ';
-
-  if (!data) {
-    return null;
-  }
+  const { data: report, isLoading  } = useFind(); 
 
   return (
     <div className="App">
       <hr />
-      <h1>{data.message}</h1>      
+      <h1>{report?.spans?.map(({spanId}) => <div>{spanId}</div>)}</h1>      
     </div>
-  );
+  ); 
 }
 
 export default App;
