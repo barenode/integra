@@ -7,5 +7,5 @@
  */
 
 export interface ReportInfo {
-  reportId: string;
+  id: string;
 }

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import './App.css';
-import { useReadReport } from './api'
+import { useParseReport } from './api'
 import ReportComponent from './component/ReportComponent';
 
 function App() {
-  
-  const { data: report } = useReadReport(''); 
+  console.log('parsing report ...');
+  const { data: reportInfo } = useParseReport(); 
 
   return (
     <div className="App">
-      {report && <ReportComponent report={report} />}
+      {reportInfo && <ReportComponent report={reportInfo} />}
     </div>
   ); 
 }

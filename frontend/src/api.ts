@@ -6,14 +6,11 @@
  * OpenAPI spec version: 1.0.11
  */
 import {
-  useQuery,
-  useMutation
+  useQuery
 } from 'react-query'
 import type {
   UseQueryOptions,
-  UseMutationOptions,
   QueryFunction,
-  MutationFunction,
   UseQueryResult,
   QueryKey
 } from 'react-query'
@@ -31,39 +28,46 @@ import type { ErrorType } from './custom-instance';
  */
 export const parseReport = (
     
- ) => {
+ signal?: AbortSignal
+) => {
       return customInstance<ReportInfo>(
-      {url: `/api/v1/report/`, method: 'post'
+      {url: `/api/v1/report`, method: 'get', signal
     },
       );
     }
   
 
+export const getParseReportQueryKey = () => [`/api/v1/report`];
 
-    export type ParseReportMutationResult = NonNullable<Awaited<ReturnType<typeof parseReport>>>
     
-    export type ParseReportMutationError = ErrorType<unknown>
+export type ParseReportQueryResult = NonNullable<Awaited<ReturnType<typeof parseReport>>>
+export type ParseReportQueryError = ErrorType<unknown>
 
-    export const useParseReport = <TError = ErrorType<unknown>,
-    TVariables = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof parseReport>>, TError,TVariables, TContext>, }
-) => {
-      const {mutation: mutationOptions} = options ?? {};
+export const useParseReport = <TData = Awaited<ReturnType<typeof parseReport>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof parseReport>>, TError, TData>, }
 
-      
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getParseReportQueryKey();
+
+  
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof parseReport>>, TVariables> = () => {
-          
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof parseReport>>> = ({ signal }) => parseReport(signal);
 
-          return  parseReport()
-        }
 
-        
+  
 
-      return useMutation<Awaited<ReturnType<typeof parseReport>>, TError, TVariables, TContext>(mutationFn, mutationOptions);
-    }
-    
+  const query = useQuery<Awaited<ReturnType<typeof parseReport>>, TError, TData>(queryKey, queryFn, queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryKey;
+
+  return query;
+}
+
+
 /**
  * @summary Reads single report
  */

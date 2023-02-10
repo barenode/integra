@@ -1,12 +1,12 @@
 package com.integra.splunk;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.integra.domain.ReportData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Report;
 import org.openapitools.model.Span;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
@@ -26,11 +26,13 @@ public class SplunkParserService {
     private final ObjectMapper mapper;
 
 
-    public Report parse() {
+    public ReportData parse() {
         try {
-            return Report.builder()
-                .spans(
-                    new ArrayList<>(Files.lines(Path.of("/tmp/session.json"))
+            String id = UUID.randomUUID().toString();
+            return ReportData.builder()
+                .report(Report.builder()
+                    .id(id)
+                    .spans(new ArrayList<>(Files.lines(Path.of("/tmp/session.json"))
                         .map(this::parseRecord)
                         .map(SplunkRecord::getResult)
                         .sorted(Comparator.comparing(SplunkRecord.Result::getTimestamp))
@@ -39,10 +41,35 @@ public class SplunkParserService {
                             SplunkRecord.Result::getTraceId,
                             LinkedHashMap::new,
                             new SplunkRecordCollector()
-                        )).values()))
-                 .build();
+                        )).values().stream().flatMap(list -> list.stream()).collect(Collectors.toList())))
+                    .build())
+                .build();
         } catch (Exception e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    private String getRequestPayload(Container container) {
+        if (container.getRequest() == null || container.getRequest().getRaw() == null) {
+            return null;
+        }
+        try {
+            RawContent raw = mapper.readValue(container.getRequest().getRaw(), RawContent.class);
+            return mapper.writeValueAsString(raw.getPayloadJson());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getResponsePayload(Container container) {
+        if (container.getResponse() == null || container.getResponse().getRaw() == null) {
+            return null;
+        }
+        try {
+            RawContent raw = mapper.readValue(container.getResponse().getRaw(), RawContent.class);
+            return mapper.writeValueAsString(raw.getPayloadJson());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -55,7 +82,7 @@ public class SplunkParserService {
     }
 
     @Slf4j
-    private static final class SplunkRecordCollector implements Collector<SplunkRecord.Result, SplunkRecordAggregator, Span> {
+    private static final class SplunkRecordCollector implements Collector<SplunkRecord.Result, SplunkRecordAggregator, List<Span>> {
         @Override
         public Supplier<SplunkRecordAggregator> supplier() {
             return SplunkRecordAggregator::new;
@@ -69,16 +96,16 @@ public class SplunkParserService {
             return (a, b) -> a;
         }
         @Override
-        public Function<SplunkRecordAggregator, Span> finisher() {
-            return this::mapSpan;
+        public Function<SplunkRecordAggregator, List<Span>> finisher() {
+            return this::mapSpans;
         }
         @Override
         public Set<Characteristics> characteristics() {
             return Collections.emptySet();
         }
 
-        private Span mapSpan(SplunkRecordAggregator aggregator) {
-            return mapSpan(aggregator.root);
+        private List<Span> mapSpans(SplunkRecordAggregator aggregator) {
+            return aggregator.roots.values().stream().map(this::mapSpan).collect(Collectors.toList());
         }
 
         private Span mapSpan(Container container) {
@@ -115,7 +142,7 @@ public class SplunkParserService {
     @Slf4j
     private static final class SplunkRecordAggregator {
 
-        private Container root;
+        private Map<String, Container> roots = new LinkedHashMap<>();
         private Map<String, Container> requests = new HashMap<>();
         private List<Container> clientRequests = new ArrayList<>();
 
@@ -127,10 +154,10 @@ public class SplunkParserService {
                     Container other = new OtherContainer(type, span);
                     if (!requests.containsKey(span.getIdent())) {
                         //throw new IllegalStateException("no parent for OTHER span: " + span);
-                        if (root == null) {
-                            root = other;
+                        if (!roots.containsKey(span.getSpanId())) {
+                            roots.put(span.getSpanId(), other);
                         } else {
-                            root.addChild(other);
+                            roots.get(span.getSpanId()).addChild(other);
                         }
                     } else {
                         Container parent = requests.get(span.getIdent());
@@ -142,16 +169,10 @@ public class SplunkParserService {
                     List<Container> crs = clientRequests.stream()
                             .filter(c -> c.matchClientRequest(span)).collect(Collectors.toList());
                     if (crs.size() == 0) {
-                        if (root == null) {
-                            root = requestContainer;
+                        if (!roots.containsKey(span.getSpanId())) {
+                            roots.put(span.getSpanId(), requestContainer);
                         } else {
-                            log.warn("Checking client request {} ", span);
-                            clientRequests.forEach(cr -> {
-                                String[] parts = span.getEvent().split(" ");
-                                log.warn("\tmessage {} , parts {}", cr.getRequest().getMessage(), parts);
-                            });
-                            //throw new IllegalStateException();
-                            root.addChild(requestContainer);
+                            roots.get(span.getSpanId()).addChild(requestContainer);
                         }
                     } else if (crs.size() == 1) {
                         crs.get(0).addChild(requestContainer);
@@ -183,7 +204,11 @@ public class SplunkParserService {
                         requestContainer.addChild(clientRequest);
                         clientRequests.add(clientRequest);
                     } else {
-                        root.addChild(clientRequest);
+                        if (!roots.containsKey(span.getSpanId())) {
+                            roots.put(span.getSpanId(), clientRequest);
+                        } else {
+                            roots.get(span.getSpanId()).addChild(clientRequest);
+                        }
                         clientRequests.add(clientRequest);
                     }
                 }
@@ -225,7 +250,7 @@ public class SplunkParserService {
         }
 
         public void print() {
-            root.print("");
+            roots.values().forEach(r -> r.print(""));
         }
     }
 

@@ -8,5 +8,6 @@
 import type { Span } from './span';
 
 export interface Report {
+  id: string;
   spans?: Span[];
 }

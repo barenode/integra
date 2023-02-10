@@ -1,14 +1,17 @@
 import * as React from 'react';
-import type { Report } from '../../model';    
+import type { ReportInfo } from '../../model';    
 import LogComponent from '../LogComponent';
+import { useReadReport } from '../../api'
 
 interface IReportComponentProps {
-    report: Report;
+    report: ReportInfo;
 }
 
 const ReportComponent: React.FC<IReportComponentProps> = ({
-    report: { spans }
+    report: { id }
 }) => {
+    const { data: report } = useReadReport(id); 
+    const { spans } = report || {};
     return (
         <>
             {spans?.map((span) => <LogComponent span={span} />)}

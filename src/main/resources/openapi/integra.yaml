@@ -12,8 +12,8 @@ info:
   version: '1.0.11'
 
 paths:
-  /api/v1/report/:
-    post:
+  /api/v1/report:
+    get:
       summary: Parses single report
       operationId: parseReport
       tags:
