@@ -1,15 +1,13 @@
-package com.example.demo.service;
+package com.integra.splunk;
 
-import com.example.demo.domain.SplunkRecord;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Report;
 import org.openapitools.model.Span;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +24,7 @@ import java.util.stream.Collectors;
 public class SplunkParserService {
 
     private final ObjectMapper mapper;
+
 
     public Report parse() {
         try {

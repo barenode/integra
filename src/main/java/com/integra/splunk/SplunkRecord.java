@@ -1,8 +1,6 @@
-package com.example.demo.domain;
+package com.integra.splunk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonRawValue;
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 

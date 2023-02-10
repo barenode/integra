@@ -1,11 +1,11 @@
 import * as React from 'react';
 import './App.css';
-import { useFind } from './api'
+import { useReadReport } from './api'
 import ReportComponent from './component/ReportComponent';
 
 function App() {
   
-  const { data: report } = useFind(); 
+  const { data: report } = useReadReport(''); 
 
   return (
     <div className="App">

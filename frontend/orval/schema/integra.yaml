@@ -12,10 +12,33 @@ info:
   version: '1.0.11'
 
 paths:
-  /api/v1/find:
+  /api/v1/report/:
+    post:
+      summary: Parses single report
+      operationId: parseReport
+      tags:
+        - report
+      responses:
+        '200':
+          description: return successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportInfo'
+
+  /api/v1/report/{reportId}:
     get:
-      summary: Finds single report
-      operationId: find
+      summary: Reads single report
+      operationId: readReport
+      tags:
+        - report
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The id of the report to retrieve
+          schema:
+            type: string
       responses:
         '200':
           description: return successfully
@@ -23,70 +46,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Report'
-        '400':
-          description: Bad Request
+
+  /api/v1/report/{reportId}/span/{spanId}:
+    get:
+      summary: Reads report span
+      operationId: readSpan
+      tags:
+        - report
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The id of the report to retrieve
+          schema:
+            type: string
+        - name: spanId
+          in: path
+          required: true
+          description: The id of the span to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: return successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '401':
-          description: You are not authorized to view the resource
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: Accessing the resource you were trying to reach is forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: The resource you were trying to reach is not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '405':
-          description: Method Not Allowed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: 'something went wrong! '
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/SpanDetail'
 
 components:
   schemas:
-    ErrorResponse:
+
+    ReportInfo:
       type: object
+      required:
+        - id
       properties:
-        code:
+        id:
           type: string
-        message:
-          type: string
-        description:
-          type: string
-        errors:
-          type: object
+
     Report:
       type: object
+      required:
+        - id
       properties:
+        id:
+          type: string
         spans:
           type: array
           items:
             $ref: '#/components/schemas/Span'
+
     Span:
-      required:
-        - spanId
-        - traceId
-        - serviceName
       type: object
+      required:
+        - id
       properties:
+        id:
+          type: string
         spanId:
           type: string
         traceId:
@@ -103,3 +120,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Span'
+
+    SpanDetail:
+      allOf:
+        - $ref: '#/components/schemas/Span'
+        - type: object
+          properties:
+            request:
+              type: string
+            response:
+              type: string

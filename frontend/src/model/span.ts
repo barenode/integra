@@ -7,9 +7,10 @@
  */
 
 export interface Span {
-  spanId: string;
-  traceId: string;
-  serviceName: string;
+  id: string;
+  spanId?: string;
+  traceId?: string;
+  serviceName?: string;
   httpStatus?: string;
   httpMethod?: string;
   label?: string;
