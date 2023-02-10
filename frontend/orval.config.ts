@@ -16,7 +16,7 @@ export default defineConfig({
       }
     },
     input: {
-      target: 'http://localhost:7777/library-openapi.yaml'
+      target: 'http://localhost:7777/integra.yaml'
     },
   },
 });

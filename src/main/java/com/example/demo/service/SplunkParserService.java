@@ -125,12 +125,18 @@ public class SplunkParserService {
             log.info("add {} {} {} - {}", type, span.getIdent(), span.getMessage(), span.getTarget());
             switch (type) {
                 case Other -> {
-                    if (!requests.containsKey(span.getIdent())) {
-                        throw new IllegalStateException("no parent for OTHER span: " + span);
-                    }
-                    Container parent = requests.get(span.getIdent());
                     Container other = new OtherContainer(type, span);
-                    parent.addChild(other);
+                    if (!requests.containsKey(span.getIdent())) {
+                        //throw new IllegalStateException("no parent for OTHER span: " + span);
+                        if (root == null) {
+                            root = other;
+                        } else {
+                            root.addChild(other);
+                        }
+                    } else {
+                        Container parent = requests.get(span.getIdent());
+                        parent.addChild(other);
+                    }
                 }
                 case RequestReceived -> {
                     Container requestContainer = new RequestContainer(type, span);
@@ -145,12 +151,17 @@ public class SplunkParserService {
                                 String[] parts = span.getEvent().split(" ");
                                 log.warn("\tmessage {} , parts {}", cr.getRequest().getMessage(), parts);
                             });
-                            throw new IllegalStateException();
+                            //throw new IllegalStateException();
+                            root.addChild(requestContainer);
                         }
                     } else if (crs.size() == 1) {
                         crs.get(0).addChild(requestContainer);
                     } else {
-                        throw new IllegalStateException();
+                        Container cr = crs.stream()
+                                .filter(c -> c.getChildren() == null || c.getChildren().isEmpty())
+                                .findFirst()
+                                .orElseThrow(IllegalStateException::new);
+                        cr.addChild(requestContainer);
                     }
                     if (requests.containsKey(span.getIdent())) {
                         throw new IllegalStateException(String.format("Duplicate request %s", span.getIdent()));
@@ -159,16 +170,23 @@ public class SplunkParserService {
                 }
                 case ResponseSent -> {
                     if (!requests.containsKey(span.getIdent())) {
-                        throw new IllegalStateException("no parent for request response: " + span);
+                        //throw new IllegalStateException("no parent for request response: " + span);
+                        log.warn("no parent for request response: " + span);
+                    } else {
+                        Container request = requests.get(span.getIdent());
+                        request.responseSent(span);
                     }
-                    Container request = requests.get(span.getIdent());
-                    request.responseSent(span);
                 }
                 case ClientRequest -> {
                     Container clientRequest = new ClientRequestContainer(type, span);
-                    Container requestContainer = requests.get(span.getIdent());
-                    requestContainer.addChild(clientRequest);
-                    clientRequests.add(clientRequest);
+                    if (requests.containsKey(span.getIdent())) {
+                        Container requestContainer = requests.get(span.getIdent());
+                        requestContainer.addChild(clientRequest);
+                        clientRequests.add(clientRequest);
+                    } else {
+                        root.addChild(clientRequest);
+                        clientRequests.add(clientRequest);
+                    }
                 }
                 case ClientResponded -> {
                     List<Container> crs = clientRequests.stream()
@@ -176,9 +194,14 @@ public class SplunkParserService {
                     if (crs.size() == 1) {
                         crs.get(0).clientResponded(span);
                     } else {
-                        throw new IllegalStateException(
-                                String.format("Multiple client request found for response! Requests {}, response {}  ", span, crs)
-                        );
+                        Container cr = crs.stream()
+                                .filter(c -> c.response == null)
+                                .findFirst()
+                                .orElseThrow(IllegalStateException::new);
+                        cr.clientResponded(span);
+//                        throw new IllegalStateException(
+//                                String.format("Multiple client request found for response! Requests {}, response {}  ", span, crs)
+//                        );
                     }
                 }
             }
@@ -245,7 +268,7 @@ public class SplunkParserService {
                     !request.getServiceName().equals(response.getServiceName()) ||
                             !request.getTraceId().equals(response.getTraceId()) ||
                             !request.getSpanId().equals(response.getSpanId()) ||
-                            !request.getEvent().equals(response.getEvent())
+                            (request.getEvent()!=null && response.getEvent()!=null && !request.getEvent().equals(response.getEvent()))
             ) {
                 log.warn(
                         String.format("Tracing do not match:\n\t%s\n\t%s", request, response));

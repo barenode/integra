@@ -114,7 +114,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<inputSpec>${project.basedir}/src/main/resources/openapi/yaml/library-openapi.yaml</inputSpec>
+							<inputSpec>${project.basedir}/src/main/resources/openapi/integra.yaml</inputSpec>
 							<generatorName>spring</generatorName>
 							<!--
 							<packageName>${project.groupId}.springreactiveopenapicodegen</packageName>
@@ -172,7 +172,6 @@
 							<goal>start</goal>
 						</goals>
 					</execution>
-					<!--
 					<execution>
 						<id>stop</id>
 						<phase>compile</phase>
@@ -180,7 +179,6 @@
 							<goal>stop</goal>
 						</goals>
 					</execution>
-					-->
 				</executions>
 			</plugin>
 			<plugin>
@@ -259,7 +257,7 @@
 							<outputDirectory>${basedir}/frontend/orval/schema</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}/src/main/resources/openapi/yaml</directory>
+									<directory>${basedir}/src/main/resources/openapi</directory>
 									<includes>
 										<include>*</include>
 									</includes>

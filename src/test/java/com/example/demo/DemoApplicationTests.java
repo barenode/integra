@@ -62,7 +62,7 @@ class DemoApplicationTests {
 
 	@Test
 	void contextLoads() throws Exception {
-		Files.lines(Path.of("/tmp/session_2.json"))
+		Files.lines(Path.of("/tmp/sesx.json"))
 			.map(this::parseRecord)
 			.map(SplunkRecord::getResult)
 			.filter(r -> r.getTimestamp() != null)
@@ -133,24 +133,23 @@ class DemoApplicationTests {
 
 	@Getter
 	private final class SplunkRecordAggregator {
-
-		private Container root;
+		private Map<String, Container> roots = new LinkedHashMap<>();
 		private Map<String, Container> requests = new HashMap<>();
 		private List<Container> clientRequests = new ArrayList<>();
 
 		public void add(SplunkRecord.Result span) {
 			ContainerType type = resolveContainerType(span);
-			log.info("add {} {} {} - {}", type, span.getIdent(), span.getMessage(), span.getTarget());
+//			log.info("add {} {} {} - {}", type, span.getIdent(), span.getMessage(), span.getTarget());
 //			log.info("\t {} add {} - {}", current != null ? (current.type + ":" + current.request.getServiceName() + ":" + current.request.getSpanId()) : "null", (type + ":" + span.getServiceName() + ":" + span.getSpanId()), span.getMessage());
 			switch (type) {
 				case Other -> {
 					Container other = new OtherContainer(type, span);
 					if (!requests.containsKey(span.getIdent())) {
 						//throw new IllegalStateException("no parent for OTHER span: " + span);
-						if (root == null) {
-							root = other;
+						if (!roots.containsKey(span.getSpanId())) {
+							roots.put(span.getSpanId(), other);
 						} else {
-							root.addChild(other);
+							roots.get(span.getSpanId()).addChild(other);
 						}
 					} else {
 						Container parent = requests.get(span.getIdent());
@@ -162,16 +161,10 @@ class DemoApplicationTests {
 					List<Container> crs = clientRequests.stream()
 						.filter(c -> c.matchClientRequest(span)).collect(Collectors.toList());
 					if (crs.size() == 0) {
-						if (root == null) {
-							root = requestContainer;
+						if (!roots.containsKey(span.getSpanId())) {
+							roots.put(span.getSpanId(), requestContainer);
 						} else {
-							log.warn("Checking client request {} ", span);
-							clientRequests.forEach(cr -> {
-								String[] parts = span.getEvent().split(" ");
-								log.warn("\tmessage {} , parts {}", cr.getRequest().getMessage(), parts);
-							});
-//							throw new IllegalStateException();
-							root.addChild(requestContainer);
+							roots.get(span.getSpanId()).addChild(requestContainer);
 						}
 					} else if (crs.size() == 1) {
 						crs.get(0).addChild(requestContainer);
@@ -203,7 +196,11 @@ class DemoApplicationTests {
 						requestContainer.addChild(clientRequest);
 						clientRequests.add(clientRequest);
 					} else {
-						root.addChild(clientRequest);
+						if (!roots.containsKey(span.getSpanId())) {
+							roots.put(span.getSpanId(), clientRequest);
+						} else {
+							roots.get(span.getSpanId()).addChild(clientRequest);
+						}
 						clientRequests.add(clientRequest);
 					}
 				}
@@ -245,7 +242,7 @@ class DemoApplicationTests {
 		}
 
 		public void print() {
-			root.print("");
+			roots.values().forEach(r -> r.print(""));
 		}
 	}
 
