@@ -1,10 +1,12 @@
 import * as React from 'react';
 import type { Span } from '../../model';    
+import SpanDetailComponent from '../SpanDetailComponent';
 import emptyImg from './img/empty.gif';
 import minusImg from './img/minus.gif';
 import plusImg from './img/plus.gif';
 
 interface ILogComponentProps {
+    reportId: string;
     span: Span;
 }
 
@@ -14,6 +16,7 @@ interface ILogComponentState {
 }
 
 const LogComponent: React.FC<ILogComponentProps> = ({
+    reportId,
     span
 }) => {
     const { 
@@ -21,7 +24,8 @@ const LogComponent: React.FC<ILogComponentProps> = ({
         childSpans, 
         label,
         traceId,
-        spanId 
+        spanId,
+        id 
     } = span;
     const hasChildSpan = childSpans?.length ? true : false;
     const [state, setState] = React.useState<ILogComponentState>({expanded: false, open: false});
@@ -29,11 +33,11 @@ const LogComponent: React.FC<ILogComponentProps> = ({
     const expandCallback = React.useCallback(() => {
         console.log('expand');
         setState({ ...state, expanded: !expanded });
-    }, [ expanded ]);
+    }, [ state, expanded ]);
     const openCallback = React.useCallback(() => {
         console.log('open');
         setState({ ...state, open: !open });
-    }, [ open ]);
+    }, [ state, open ]);
     const expandIcon = hasChildSpan ? ( expanded ? minusImg : plusImg) : emptyImg;
     return (
         <div style={{ marginLeft: '20px'}}>
@@ -59,14 +63,14 @@ const LogComponent: React.FC<ILogComponentProps> = ({
                     {serviceName}
                 </span>
                 :&nbsp;
-                <span>
+                {/* <span>
                     {traceId}
                 </span>
                 :
                 <span>
                     {spanId}
                 </span>
-                :&nbsp;
+                :&nbsp; */}
                 <span>
                     log.method
                 </span>
@@ -79,13 +83,11 @@ const LogComponent: React.FC<ILogComponentProps> = ({
                 </span>
             </h3>
             {open && 
-                <div>
-                    slide
-                </div>
+                <SpanDetailComponent reportId={reportId} spanId={id} />
             }
             {expanded &&
                 <span>
-                    {childSpans?.map((childSpan) => <LogComponent span={childSpan} />)}
+                    {childSpans?.map((childSpan) => <LogComponent reportId={reportId} span={childSpan} />)}
                 </span>
             }
         </div>

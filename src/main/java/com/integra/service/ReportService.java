@@ -1,37 +1,27 @@
 package com.integra.service;
 
-import com.integra.config.IntegraConfig;
-import com.integra.domain.ReportData;
-import com.integra.splunk.SplunkParserService;
+import com.integra.splunk.SplunkService;
 import lombok.RequiredArgsConstructor;
 import org.openapitools.model.Report;
 import org.openapitools.model.ReportInfo;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
+import org.openapitools.model.SpanDetail;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class ReportService {
 
-    private final SplunkParserService splunkParserService;
-    private final CacheManager cacheManager;
+    private final SplunkService splunkParserService;
 
     public ReportInfo parse() {
-        ReportData reportData = splunkParserService.parse();
-        Cache cache = cacheManager.getCache(IntegraConfig.REPORT_CACHE);
-        cache.put(reportData.getReport().getId(), reportData);
-        return ReportInfo.builder()
-            .id(reportData.getReport().getId())
-            .build();
+        return splunkParserService.parse();
     }
 
     public Report read(String reportId) {
-        Cache cache = cacheManager.getCache(IntegraConfig.REPORT_CACHE);
-        ReportData reportData = cache.get(reportId, ReportData.class);
-        if (reportData == null) {
-            throw new IllegalStateException(String.format("Report with id %s not found!", reportId));
-        }
-        return reportData.getReport();
+        return splunkParserService.read(reportId);
+    }
+
+    public SpanDetail readSpan(String reportId, String spanId) {
+        return splunkParserService.readSpan(reportId, spanId);
     }
 }

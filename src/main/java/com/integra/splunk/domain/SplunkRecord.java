@@ -1,11 +1,10 @@
-package com.integra.splunk;
+package com.integra.splunk.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.ToString;
 
 import java.time.OffsetDateTime;
-import java.util.Map;
 
 /**
  * {
@@ -66,38 +65,39 @@ public class SplunkRecord {
         @JsonProperty("_raw")
         private String raw;
 
-        public String getBaseIdent() {
-            return String.format("%s:%s:%s", serviceName, traceId, spanId);
-        }
-
         public String getIdent() {
             return String.format("%s:%s:%s:%s", serviceName, traceId, spanId, event);
-        }
-
-        @JsonProperty("payload-json")
-        public void setPayloadJson(Map data) {
-            System.out.println("!!!!!!!!!!!" + data);
         }
 
         @Override
         public String toString() {
             return String.format("%s:%s:%s:%s:%s:%s", timestamp, serviceName, traceId, spanId, event, message);
-//            return "Result{" +
-//                    "timestamp=" + timestamp +
-//                    ", traceId='" + traceId + '\'' +
-//                    ", spanId='" + spanId + '\'' +
-//                    ", serviceName='" + serviceName + '\'' +
-//                    ", httpMethod='" + httpMethod + '\'' +
-//                    ", httpStatus='" + httpStatus + '\'' +
-//                    ", event='" + event + '\'' +
-//                    ", message='" + message + '\'' +
-//                    '}';
         }
 
-        public boolean isRaw() {
-            return false;//spanId == null && raw != null;
+        public ContainerType resolveContainerType() {
+            if (message == null) {
+                return ContainerType.Other;
+            }
+            String sanitized = message.trim().toLowerCase();
+            if (sanitized.startsWith("request received")) {
+                return ContainerType.RequestReceived;
+            } else if (sanitized.startsWith("client request")) {
+                return ContainerType.ClientRequest;
+            } else if (sanitized.startsWith("response sent")) {
+                return ContainerType.ResponseSent;
+            } else if (sanitized.startsWith("client responded")) {
+                return ContainerType.ClientResponded;
+            } else {
+                return ContainerType.Other;
+            }
         }
     }
 
-
+    @Data
+    public static class RawContent {
+        @JsonProperty("payload-json")
+        Object payloadJson;
+        @JsonProperty("payload")
+        String payload;
+    }
 }

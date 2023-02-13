@@ -1,6 +1,6 @@
 package com.integra;
 
-import com.integra.splunk.SplunkRecord;
+import com.integra.splunk.domain.SplunkRecord;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -87,9 +87,9 @@ class DemoApplicationTests {
 	private SplunkRecord parseRecord(String raw) {
 		try {
 			SplunkRecord record = mapper.readValue(raw, SplunkRecord.class);
-			if (record.getResult().isRaw()) {
-				record.setResult(mapper.readValue(record.getResult().getRaw(), SplunkRecord.Result.class));
-			}
+//			if (record.getResult().isRaw()) {
+//				record.setResult(mapper.readValue(record.getResult().getRaw(), SplunkRecord.Result.class));
+//			}
 			return record;
 		} catch (Exception e) {
 			throw new IllegalStateException(e);

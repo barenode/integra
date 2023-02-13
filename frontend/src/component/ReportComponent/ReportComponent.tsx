@@ -14,7 +14,7 @@ const ReportComponent: React.FC<IReportComponentProps> = ({
     const { spans } = report || {};
     return (
         <>
-            {spans?.map((span) => <LogComponent span={span} />)}
+            {spans?.map((span) => <LogComponent reportId={id} span={span} />)}
         </>
     );
   };

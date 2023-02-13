@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.openapitools.api.ReportApi;
 import org.openapitools.model.Report;
 import org.openapitools.model.ReportInfo;
+import org.openapitools.model.SpanDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
@@ -32,5 +33,15 @@ public class ReportController implements ReportApi {
     ) {
         return Mono.just(ResponseEntity.ok().body(
             service.read(reportId)));
+    }
+
+    @Override
+    public Mono<ResponseEntity<SpanDetail>> readSpan(
+        String reportId,
+        String spanId,
+        ServerWebExchange exchange)
+    {
+        return Mono.just(ResponseEntity.ok().body(
+            service.readSpan(reportId, spanId)));
     }
 }
