@@ -37,9 +37,10 @@ public class SplunkService {
     public ReportInfo parse() {
         try {
             String id = UUID.randomUUID().toString();
-            SplunkReport report = Files.lines(Path.of("/tmp/1676122736_230398_A12409EF-F969-44D4-8F0D-C6D2B7B7091F.json"))
+            SplunkReport report = Files.lines(Path.of("/tmp/1676465055_158805_A12409EF-F969-44D4-8F0D-C6D2B7B7091F.json"))
                 .map(this::parseRecord)
                 .map(SplunkRecord::getResult)
+                .filter(r -> r.getTimestamp() != null)
                 .sorted(Comparator.comparing(SplunkRecord.Result::getTimestamp))
                 .filter(r -> r.getTraceId() != null)
                 .collect(Collectors.groupingBy(

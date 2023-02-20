@@ -1,9 +1,276 @@
 <html>
-<body>
+    <style>
+        .main-style {
+            font-size: clamp(12px, 1.5vw, 14px);
+            font-family: sans-serif; 
+            background-color: rgb(11, 21, 33);
+            color: white;
+        }
+
+        .report {
+            padding: 0.5em;
+        }
+
+        .span {
+            font-family: Menlo, monospace; 
+            font-size: 1em; 
+            line-height: 1.7; 
+            outline: none; 
+            word-break: break-word;
+        }
+
+        .span-icon-button {
+            cursor: pointer; 
+            color: inherit; 
+            font: inherit; 
+            outline: inherit; 
+            background: transparent; 
+            border: none; 
+            padding: 0px;
+        }
+
+        .span-icon-collapsed {
+            display: inline-block; 
+            transition: all 0.1s ease 0s; 
+        }
+
+        .span-icon-expanded {
+            display: inline-block; 
+            transition: all 0.1s ease 0s; 
+            transform: rotate(90deg);
+        }
+
+        .child-span-container {
+            margin-left: 0.1em; 
+            padding-left: 1em; 
+            border-left: 2px solid rgba(0, 0, 0, 0.15);
+        }
+        
+        .span-text-small {
+            color: grey; 
+            font-size: 0.7em;
+        }       
+        
+        
+
+        .table-container {
+            overflow-y: auto; 
+            flex: 1 1 0%;
+        }
+
+        .table-button {
+            display: flex; 
+            border-bottom: 1px solid rgb(34, 46, 62); 
+            cursor: pointer;
+        }
+
+        .table-button-head {
+            flex: 0 0 auto; 
+            min-width: 2em;
+            min-height: 2em; 
+            background: rgb(0, 171, 82); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+            color: white;
+        }
+
+        .table-button-text {
+            font-size: 0.9em; 
+            color: inherit; 
+            background: inherit; 
+            padding: 0.5em;
+        }
 
 
-    <div class="ReactQueryDevtoolsPanel" aria-label="React Query Devtools Panel" id="ReactQueryDevtoolsPanel" style="font-size: clamp(12px, 1.5vw, 14px); font-family: sans-serif; display: flex; background-color: rgb(11, 21, 33); color: white; position: fixed; bottom: 0px; right: 0px; z-index: 99999; width: 100%; height: 668.688px; max-height: 90%; box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 20px; border-top: 1px solid rgb(63, 78, 96); transform-origin: center top; visibility: visible; transition: all 0.2s ease 0s; opacity: 1; pointer-events: all; transform: translateY(0px) scale(1);">
-       <!-- <style>
+        .report-container {
+            overflow-y: auto; 
+            display: flex;
+            background-color: rgb(34, 46, 62);
+            padding: 2px;
+            flex-grow: 1;
+        }
+
+        .report-span {
+            min-height: 2em; 
+            display: flex; 
+            margin-bottom: 2px; 
+            background-color: rgb(11, 21, 33);
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .report-span-selected {
+            height: 2em; 
+            display: flex; 
+            cursor: pointer; 
+            margin-bottom: 2px; 
+            background: rgba(255, 255, 255, 0.1);
+            flex-grow: 1;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .report-span-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+<body class="main-style">
+
+
+    <div style="display: flex; background:rgb(0, 171, 82)">
+        <div style="background:rgb(63, 78, 96); flex: 1 1 500px;">XXX</div>       
+    </div>
+
+    <div class="container">
+
+    
+        <div class="report-container">
+            <div class="report-span-container">
+                <div class="report-span">
+                    <div class="span-icon-expanded">▶</div>
+                    <code class="table-button-text">
+                        2023-03-03T12:20:00
+                    </code>
+                    <div class="table-button-head">
+                        1
+                    </div>
+                    <code class="table-button-text">
+                        {"_raw":"{\"message\":\"Request received\",\"logger\":\"cz.vodafone.dxl.web.logging.MvcLoggingFilter\",\"process-thread\":\"http-nio-8080-exec-7\",\"severity\":\"INFO\",\"level_value\":20000,\"trac
+                    </code>
+                </div>
+                <div class="child-span-container">
+                    <div class="report-span-container">
+                        <div class="report-span">
+                            <div class="span-icon-collapsed">▶</div>
+                            <code class="table-button-text">
+                                2023-03-03T12:20:00
+                            </code>
+                            <div class="table-button-head">
+                                1
+                            </div>
+                            <code class="table-button-text">
+                                {"_raw":"{\"message\":\"Request received\",\"logger\":\"cz.vodafone.dxl.web.logging.MvcLoggingFilter\",\"process-thread\":\"http-nio-8080-exec-7\",\"severity\":\"INFO\",\"level_value\":20000,\"trac
+                            </code>
+                        </div>
+                    </div>
+                    <div class="report-span-container">
+                        <div class="report-span">
+                            <div class="span-icon-collapsed">▶</div>
+                            <code class="table-button-text">
+                                2023-03-03T12:20:00
+                            </code>
+                            <div class="table-button-head">
+                                1
+                            </div>
+                            <code class="table-button-text">
+                                {"_raw":"{\"message\":\"Request received\",\"logger\":\"cz.vodafone.dxl.web.logging.MvcLoggingFilter\",\"process-thread\":\"http-nio-8080-exec-7\",\"severity\":\"INFO\",\"level_value\":20000,\"trac
+                            </code>
+                        </div>
+                    </div>
+                    <div class="report-span-container">
+                        <div class="report-span"> 
+                        </div>
+                    </div>
+                    <div class="report-span-container">
+                        <div class="report-span-selected"> 
+                            <div class="span-icon-expanded">▶</div>
+                            <code class="table-button-text">
+                                2023-03-03T12:20:00
+                            </code>
+                        </div>
+                    </div>
+                    <div class="report-span-container">
+                        <div class="report-span">                        
+                            <div class="span-icon-expanded">▶</div>
+                            <code class="table-button-text">
+                                2023-03-03T12:20:00
+                            </code>                                     
+                            <code class="table-button-text">
+                                {"_raw":"{\"message\":\"Request received\",\"logger\":\"cz.vodafone.dxl.web.logging.MvcLoggingFilter\",\"process-thread\":\"http-nio-8080-exec-7\",\"severity\":\"INFO\",\"level_value\":20000,\"trac
+                            </code>
+                        </div>
+                        <div class="child-span-container">
+                            <div class="report-span-container">
+                                <div class="report-span">
+                                    <div class="span-icon-collapsed">▶</div>
+                                    <code class="table-button-text">
+                                        2023-03-03T12:20:00
+                                    </code>
+                                    <div class="table-button-head">
+                                        1
+                                    </div>
+                                    <code class="table-button-text">
+                                        {"_raw":"{\"message\":\"Request received\",\"logger\":\"cz.vodafone.dxl.web.logging.MvcLoggingFilter\",\"process-thread\":\"http-nio-8080-exec-7\",\"severity\":\"INFO\",\"level_value\":20000,\"trac
+                                    </code>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr />
+
+    <div class="report">
+        <div class="span">
+            <button class="span-icon-button">
+                <span class="span-icon-expanded">▶</span> 
+                Span Text                                   
+            </button>
+            <div class="child-span-container">
+                <div class="span">
+                    <button class="span-icon-button">
+                        <span class="span-icon-collapsed">▶</span> 
+                        Span Text     
+                        <span class="span-text-small">16 items</span>                             
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="table-container">
+        <div role="button" class="table-button">
+            <div class="table-button-head">
+                1
+            </div>
+            <code class="table-button-text">
+                {"_raw":"{\"message\":\"Request received\",\"logger\":\"cz.vodafone.dxl.web.logging.MvcLoggingFilter\",\"process-thread\":\"http-nio-8080-exec-7\",\"severity\":\"INFO\",\"level_value\":20000,\"trac
+            </code>
+        </div>
+    </div>    
+
+    <hr />
+    
+    <div style="overflow-y: auto; flex: 1 1 0%;">
+        <div role="button" aria-label="Open query details for [&quot;/api/v1/report/aab70bb8-ae24-4928-aadc-36192f35ae0c&quot;]" style="display: flex; border-bottom: 1px solid rgb(34, 46, 62); cursor: pointer;">
+           <div style="flex: 0 0 auto; width: 2em; height: 2em; background: rgb(0, 171, 82); display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: black 0px 0px 10px; color: white;">1</div>
+           <code style="font-size: 0.9em; color: inherit; background: inherit; padding: 0.5em;">["/api/v1/report/aab70bb8-ae24-4928-aadc-36192f35ae0c"]</code>
+        </div>
+        <div role="button" aria-label="Open query details for [&quot;/api/v1/report&quot;]" style="display: flex; border-bottom: 1px solid rgb(34, 46, 62); cursor: pointer;">
+           <div style="flex: 0 0 auto; width: 2em; height: 2em; background: rgb(0, 171, 82); display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: black 0px 0px 10px; color: white;">1</div>
+           <code style="font-size: 0.9em; color: inherit; background: inherit; padding: 0.5em;">["/api/v1/report"]</code>
+        </div>
+        <div role="button" aria-label="Open query details for [&quot;/api/v1/report/d6929a12-6abb-47ae-b629-6d90633c0c83&quot;]" style="display: flex; border-bottom: 1px solid rgb(34, 46, 62); cursor: pointer; background: rgba(255, 255, 255, 0.1);">
+           <div style="flex: 0 0 auto; width: 2em; height: 2em; background: rgb(63, 78, 96); display: flex; align-items: center; justify-content: center; font-weight: bold; text-shadow: black 0px 0px 10px; color: white;">0</div>
+           <code style="font-size: 0.9em; color: inherit; background: inherit; padding: 0.5em;">["/api/v1/report/d6929a12-6abb-47ae-b629-6d90633c0c83"]</code>
+        </div>
+     </div>
+
+       <!-- 
+    <div style="font-size: clamp(12px, 1.5vw, 14px); font-family: sans-serif; display: flex; background-color: rgb(11, 21, 33); color: white; position: fixed; bottom: 0px; right: 0px; z-index: 99999; width: 100%; height: 668.688px; max-height: 90%; box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 20px; border-top: 1px solid rgb(63, 78, 96); transform-origin: center top; visibility: visible; transition: all 0.2s ease 0s; opacity: 1; pointer-events: all; transform: translateY(0px) scale(1);">
+    <style>
           .ReactQueryDevtoolsPanel * {
           scrollbar-color: #132337 #3f4e60;
           }
@@ -118,9 +385,12 @@
                 </div>
              </div>
           </div>
-       </div> -->
+       </div> 
     </div>
+    -->
+    <!--
     <button type="button" aria-controls="ReactQueryDevtoolsPanel" aria-haspopup="true" aria-expanded="true" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(63, 78, 96); border: 0px; border-radius: 0.3em; color: white; padding: 0.5em; cursor: pointer; position: fixed; z-index: 99999; margin: 0.5em; bottom: 0px; left: 0px;">Close</button>
+    -->
 
 </body>
 </html>
