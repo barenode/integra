@@ -1,6 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
-export const AXIOS_INSTANCE = Axios.create({ baseURL: 'http://localhost:8080' });
+export const AXIOS_INSTANCE = Axios.create({ baseURL: 'http://localhost:7777' });
 
 export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
   const source = Axios.CancelToken.source();
