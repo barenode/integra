@@ -23,7 +23,7 @@
 		<docker-maven-plugin.version>0.38.0</docker-maven-plugin.version>
 
 		<!-- frontend -->
-		<frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
+		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
 		<node.version>v14.18.0</node.version>
 		<yarn.version>v1.12.1</yarn.version>
 	</properties>
@@ -293,6 +293,24 @@
 							</execution>
 						</executions>
 					</plugin>
+					<!--
+					<plugin>
+						<groupId>org.graalvm.buildtools</groupId>
+						<artifactId>native-maven-plugin</artifactId>
+						<extensions>true</extensions>
+						<executions>
+							<execution>
+								<id>build-native</id>
+								<goals>
+									<goal>compile-no-fork</goal>
+								</goals>
+								<phase>package</phase>
+							</execution>
+						</executions>
+						<configuration>
+						</configuration>
+					</plugin>
+					-->
 				</plugins>
 			</build>
 		</profile>
