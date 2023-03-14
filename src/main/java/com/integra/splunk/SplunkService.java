@@ -25,6 +25,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -35,9 +36,11 @@ public class SplunkService {
     private final SplunkMapper splunkMapper;
 
     public ReportInfo parse() {
+        Stream<String> lines = null;
         try {
+            lines = Files.lines(Path.of("/tmp/1676361686_16229_A12409EF-F969-44D4-8F0D-C6D2B7B7091F.json"));
             String id = UUID.randomUUID().toString();
-            SplunkReport report = Files.lines(Path.of("/tmp/1676361686_16229_A12409EF-F969-44D4-8F0D-C6D2B7B7091F.json"))
+            SplunkReport report = lines
                 .map(this::parseRecord)
                 .map(SplunkRecord::getResult)
                 .filter(r -> r.getTimestamp() != null)
@@ -49,26 +52,35 @@ public class SplunkService {
                     new SplunkRecordCollector()
                 )).values().stream()
                 .reduce(new SplunkReport(), SplunkReport::merge);
-            Cache cache = cacheManager.getCache(IntegraConfig.REPORT_CACHE);
-            cache.put(id, report);
+            getCache().put(id, report);
             return ReportInfo.builder()
                 .id(id)
                 .build();
         } catch (Exception e) {
             throw new IllegalStateException(e);
+        } finally {
+            if (lines != null) {
+                lines.close();
+            }
         }
     }
 
     public Report read(String id) {
-        Cache cache = cacheManager.getCache(IntegraConfig.REPORT_CACHE);
-        SplunkReport report = cache.get(id, SplunkReport.class);
+        SplunkReport report = getCache().get(id, SplunkReport.class);
         return splunkMapper.mapReport(id, report);
     }
 
     public SpanDetail readSpan(String id, String spanId) {
-        Cache cache = cacheManager.getCache(IntegraConfig.REPORT_CACHE);
-        SplunkReport report = cache.get(id, SplunkReport.class);
+        SplunkReport report = getCache().get(id, SplunkReport.class);
         return splunkMapper.mapSpanDetail(report.getContainerMap().get(spanId));
+    }
+
+    private Cache getCache() {
+        Cache cache = cacheManager.getCache(IntegraConfig.REPORT_CACHE);
+        if (cache == null) {
+            throw new IllegalStateException("No cache found");
+        }
+        return cache;
     }
 
     private SplunkRecord parseRecord(String raw) {

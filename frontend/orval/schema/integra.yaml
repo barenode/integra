@@ -12,6 +12,25 @@ info:
   version: '1.0.11'
 
 paths:
+  /api/v1/upload:
+    post:
+      summary: Uploads content
+      operationId: upload
+      tags:
+        - report
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Created
+
   /api/v1/report:
     get:
       summary: Parses single report

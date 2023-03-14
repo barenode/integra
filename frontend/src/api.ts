@@ -6,15 +6,19 @@
  * OpenAPI spec version: 1.0.11
  */
 import {
-  useQuery
+  useQuery,
+  useMutation
 } from 'react-query'
 import type {
   UseQueryOptions,
+  UseMutationOptions,
   QueryFunction,
+  MutationFunction,
   UseQueryResult,
   QueryKey
 } from 'react-query'
 import type {
+  UploadBody,
   ReportInfo,
   Report,
   SpanDetail
@@ -23,6 +27,50 @@ import { customInstance } from './custom-instance';
 import type { ErrorType } from './custom-instance';
 
 
+/**
+ * @summary Uploads content
+ */
+export const upload = (
+    uploadBody: UploadBody,
+ ) => {const formData = new FormData();
+if(uploadBody.file !== undefined) {
+ formData.append('file', uploadBody.file)
+ }
+
+      return customInstance<void>(
+      {url: `/api/v1/upload`, method: 'post',
+      headers: {'Content-Type': 'multipart/form-data', },
+       data: formData
+    },
+      );
+    }
+  
+
+
+    export type UploadMutationResult = NonNullable<Awaited<ReturnType<typeof upload>>>
+    export type UploadMutationBody = UploadBody
+    export type UploadMutationError = ErrorType<unknown>
+
+    export const useUpload = <TError = ErrorType<unknown>,
+    
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof upload>>, TError,{data: UploadBody}, TContext>, }
+) => {
+      const {mutation: mutationOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof upload>>, {data: UploadBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  upload(data,)
+        }
+
+        
+
+      return useMutation<Awaited<ReturnType<typeof upload>>, TError, {data: UploadBody}, TContext>(mutationFn, mutationOptions);
+    }
+    
 /**
  * @summary Parses single report
  */
