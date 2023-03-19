@@ -18,11 +18,11 @@ import type {
   QueryKey
 } from 'react-query'
 import type {
-  UploadBody,
   ReportInfo,
+  ParseReportBody,
   Report,
   SpanDetail
-} from './model'
+} from '../model'
 import { customInstance } from './custom-instance';
 import type { ErrorType } from './custom-instance';
 
@@ -30,15 +30,15 @@ import type { ErrorType } from './custom-instance';
 /**
  * @summary Uploads content
  */
-export const upload = (
-    uploadBody: UploadBody,
+export const parseReport = (
+    parseReportBody: ParseReportBody,
  ) => {const formData = new FormData();
-if(uploadBody.file !== undefined) {
- formData.append('file', uploadBody.file)
+if(parseReportBody.file !== undefined) {
+ formData.append('file', parseReportBody.file)
  }
 
-      return customInstance<void>(
-      {url: `/api/v1/upload`, method: 'post',
+      return customInstance<ReportInfo>(
+      {url: `/api/v1/report`, method: 'post',
       headers: {'Content-Type': 'multipart/form-data', },
        data: formData
     },
@@ -47,75 +47,30 @@ if(uploadBody.file !== undefined) {
   
 
 
-    export type UploadMutationResult = NonNullable<Awaited<ReturnType<typeof upload>>>
-    export type UploadMutationBody = UploadBody
-    export type UploadMutationError = ErrorType<unknown>
+    export type ParseReportMutationResult = NonNullable<Awaited<ReturnType<typeof parseReport>>>
+    export type ParseReportMutationBody = ParseReportBody
+    export type ParseReportMutationError = ErrorType<unknown>
 
-    export const useUpload = <TError = ErrorType<unknown>,
+    export const useParseReport = <TError = ErrorType<unknown>,
     
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof upload>>, TError,{data: UploadBody}, TContext>, }
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof parseReport>>, TError,{data: ParseReportBody}, TContext>, }
 ) => {
       const {mutation: mutationOptions} = options ?? {};
 
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof upload>>, {data: UploadBody}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof parseReport>>, {data: ParseReportBody}> = (props) => {
           const {data} = props ?? {};
 
-          return  upload(data,)
+          return  parseReport(data,)
         }
 
         
 
-      return useMutation<Awaited<ReturnType<typeof upload>>, TError, {data: UploadBody}, TContext>(mutationFn, mutationOptions);
+      return useMutation<Awaited<ReturnType<typeof parseReport>>, TError, {data: ParseReportBody}, TContext>(mutationFn, mutationOptions);
     }
     
-/**
- * @summary Parses single report
- */
-export const parseReport = (
-    
- signal?: AbortSignal
-) => {
-      return customInstance<ReportInfo>(
-      {url: `/api/v1/report`, method: 'get', signal
-    },
-      );
-    }
-  
-
-export const getParseReportQueryKey = () => [`/api/v1/report`];
-
-    
-export type ParseReportQueryResult = NonNullable<Awaited<ReturnType<typeof parseReport>>>
-export type ParseReportQueryError = ErrorType<unknown>
-
-export const useParseReport = <TData = Awaited<ReturnType<typeof parseReport>>, TError = ErrorType<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof parseReport>>, TError, TData>, }
-
-  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-
-  const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getParseReportQueryKey();
-
-  
-
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof parseReport>>> = ({ signal }) => parseReport(signal);
-
-
-  
-
-  const query = useQuery<Awaited<ReturnType<typeof parseReport>>, TError, TData>(queryKey, queryFn, queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  query.queryKey = queryKey;
-
-  return query;
-}
-
-
 /**
  * @summary Reads single report
  */

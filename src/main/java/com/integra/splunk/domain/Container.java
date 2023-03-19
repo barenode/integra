@@ -40,8 +40,7 @@ public class Container {
                         (request.getEvent()!=null && response.getEvent()!=null && !request.getEvent().equals(response.getEvent()))
         ) {
             log.warn(
-                    String.format("Tracing do not match:\n\t%s\n\t%s", request, response));
-            //throw new IllegalStateException("Tracing do not match!");
+                String.format("Tracing do not match:%n\t%s%n\t%s", request, response));
         }
     }
 
@@ -58,8 +57,8 @@ public class Container {
     }
 
     public void print(String indent) {
-        System.out.println(String.format(
-                "%s %s %s:%s", indent, type, request, response));
+        log.info(String.format(
+            "%s %s %s:%s", indent, type, request, response));
         Optional.ofNullable(children).orElse(Collections.emptyList()).forEach(ch -> ch.print(indent + "\t"));
     }
 }

@@ -13,8 +13,8 @@ public class ReportService {
 
     private final SplunkService splunkParserService;
 
-    public ReportInfo parse() {
-        return splunkParserService.parse();
+    public ReportInfo parse(byte[] input) {
+        return splunkParserService.parse(input);
     }
 
     public Report read(String reportId) {

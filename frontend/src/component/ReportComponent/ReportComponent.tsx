@@ -1,7 +1,7 @@
 import * as React from 'react';
 import type { ReportInfo } from '../../model';    
 import LogComponent from '../LogComponent';
-import { useReadReport } from '../../api'
+import { useReadReport } from '../../api/api'
 
 interface IReportComponentProps {
     report: ReportInfo;
@@ -14,7 +14,7 @@ const ReportComponent: React.FC<IReportComponentProps> = ({
     const { spans } = report || {};
     return (
         <>
-            {spans?.map((span) => <LogComponent reportId={id} span={span} />)}
+            {spans?.map((span) => <LogComponent key={id} reportId={id} span={span} />)}
         </>
     );
   };

@@ -1,5 +1,6 @@
 export * from './errorResponse';
 export * from './errorResponseErrors';
+export * from './parseReportBody';
 export * from './postApiV1UploadBody';
 export * from './report';
 export * from './reportInfo';

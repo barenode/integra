@@ -12,10 +12,10 @@ info:
   version: '1.0.11'
 
 paths:
-  /api/v1/upload:
+  /api/v1/report:
     post:
       summary: Uploads content
-      operationId: upload
+      operationId: parseReport
       tags:
         - report
       requestBody:
@@ -27,16 +27,6 @@ paths:
                 file:
                   type: string
                   format: binary
-      responses:
-        '201':
-          description: Created
-
-  /api/v1/report:
-    get:
-      summary: Parses single report
-      operationId: parseReport
-      tags:
-        - report
       responses:
         '200':
           description: return successfully

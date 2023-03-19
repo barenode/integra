@@ -76,7 +76,7 @@ public class SplunkMapper {
                 return raw.getPayload();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -92,8 +92,7 @@ public class SplunkMapper {
                 return raw.getPayload();
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
-
 }

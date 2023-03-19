@@ -9,5 +9,4 @@ public class IntegraApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(IntegraApplication.class, args);
 	}
-
 }

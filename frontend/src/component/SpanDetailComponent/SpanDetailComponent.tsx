@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useReadSpan } from '../../api'
+import { useReadSpan } from '../../api/api'
 
 interface ISpanDetailComponentProps {
     reportId: string;

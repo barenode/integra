@@ -1,0 +1,20 @@
+FROM ubuntu
+RUN apt-get update && \
+    apt-get -y install gcc libc6-dev zlib1g-dev curl bash && \
+    rm -rf /var/lib/apt/lists/*
+ENV GRAAL_VERSION 22.3.1
+ENV GRAAL_FILENAME graalvm-ce-java17-linux-amd64-${GRAAL_VERSION}.tar.gz
+ENV JAVA_HOME=/usr/lib/graalvm
+# ENV JAVA_TOOL_OPTIONS -agentlib:native-image-agent=trace-output=/tmp/trace.json
+ENV JAVA_TOOL_OPTIONS -agentlib:native-image-agent=config-output-dir=/tmp/
+RUN curl -4 -L https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-${GRAAL_VERSION}/${GRAAL_FILENAME} -o /tmp/${GRAAL_FILENAME}
+RUN tar -zxvf /tmp/${GRAAL_FILENAME} -C /tmp \
+    && mv /tmp/graalvm-ce-java17-${GRAAL_VERSION} ${JAVA_HOME}
+RUN rm -rf /tmp/*
+RUN ${JAVA_HOME}/bin/gu install native-image
+COPY target/integra-0.0.1-SNAPSHOT.jar app.jar
+CMD ["/usr/lib/graalvm/bin/java", "-jar", "app.jar"]
+
+
+# https://github.com/oracle/graal/releases/download/vm-22.3.1/graalvm-ce-java17-linux-amd64-22.3.1.tar.gz
+# https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.1/graalvm-ce-java17-linux-aarch64-22.3.1.tar.gz

@@ -4,13 +4,13 @@ export default defineConfig({
   api: {
     output: {
       mode: 'split',
-      target: 'src/api.ts',
+      target: 'src/api/api.ts',
       schemas: 'src/model',
       client: 'react-query',
       mock: false,
       override: {
         mutator: {
-          path: './src/custom-instance.ts',
+          path: './src/api/custom-instance.ts',
           name: 'customInstance',
         }
       }

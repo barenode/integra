@@ -2,7 +2,6 @@ package com.integra.splunk;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.integra.config.IntegraConfig;
-import com.integra.splunk.domain.Container;
 import com.integra.splunk.domain.SplunkRecord;
 import com.integra.splunk.domain.SplunkRecordAggregator;
 import com.integra.splunk.domain.SplunkReport;
@@ -12,12 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Report;
 import org.openapitools.model.ReportInfo;
 import org.openapitools.model.SpanDetail;
+import org.springframework.aot.hint.annotation.RegisterReflectionForBinding;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -29,16 +30,23 @@ import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
+@RegisterReflectionForBinding(classes = {
+    SplunkRecord.class,
+    SplunkRecord.RawContent.class,
+    SplunkRecord.Result.class })
 public class SplunkService {
 
     private final ObjectMapper mapper;
     private final CacheManager cacheManager;
     private final SplunkMapper splunkMapper;
 
-    public ReportInfo parse() {
-        Stream<String> lines = null;
-        try {
-            lines = Files.lines(Path.of("/tmp/1676361686_16229_A12409EF-F969-44D4-8F0D-C6D2B7B7091F.json"));
+    public ReportInfo parse(byte[] input) {        
+        log.info("Parsing report ...");
+        try (     
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(input)));
+            Stream<String> lines = reader.lines();
+        ) {            
             String id = UUID.randomUUID().toString();
             SplunkReport report = lines
                 .map(this::parseRecord)
@@ -53,15 +61,14 @@ public class SplunkService {
                 )).values().stream()
                 .reduce(new SplunkReport(), SplunkReport::merge);
             getCache().put(id, report);
-            return ReportInfo.builder()
+            ReportInfo result = ReportInfo.builder()
                 .id(id)
                 .build();
+            log.info("Result: {}", result);
+            return result;
         } catch (Exception e) {
+            log.error("Error processing content: " + e.getMessage(), e);
             throw new IllegalStateException(e);
-        } finally {
-            if (lines != null) {
-                lines.close();
-            }
         }
     }
 
@@ -91,7 +98,6 @@ public class SplunkService {
         }
     }
 
-    @Slf4j
     private static final class SplunkRecordCollector implements Collector<SplunkRecord.Result, SplunkRecordAggregator, SplunkReport> {
         @Override
         public Supplier<SplunkRecordAggregator> supplier() {
