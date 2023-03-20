@@ -1,11 +1,6 @@
 <html>
     <style>
-        .main-style {
-            font-size: clamp(12px, 1.5vw, 14px);
-            font-family: sans-serif; 
-            background-color: rgb(11, 21, 33);
-            color: white;
-        }
+        
 
         .report {
             padding: 0.5em;
@@ -83,15 +78,7 @@
         }
 
 
-        .report-container {
-            flex-grow: 1;
-            flex-basis: auto;
-            /* display: flex;
-            flex-direction: column; */
-            /* background-color: rgb(34, 46, 62); */
-            padding: 2px;
-            
-        }
+
 
         .report-span {
             min-height: 2em; 
@@ -112,15 +99,38 @@
             flex-grow: 1;
         }
 
-        .container {
-            display: flex;
-            flex-wrap: none;
-        }
+
 
         .report-span-container {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
+        }
+
+
+
+
+        .main-style {
+            font-size: clamp(12px, 1.5vw, 14px);
+            font-family: sans-serif; 
+            background-color: rgb(11, 21, 33);
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .report-container {
+            flex-grow: 1;
+            flex-basis: auto;
+            padding: 2px;            
+        }
+
+        .detail-container { 
+            padding: 2px;   
+            flex: 0 0 500px;
         }
     </style>
 <body class="main-style">
@@ -226,8 +236,9 @@
                 </div>
             </div>
         </div>
-
-        <div style="flex: 1 1 500px; display: flex; flex-direction: column; overflow: auto; height: 100%;">
+<!-- 
+        <div style="flex: 1 1 500px; display: flex; flex-direction: column; overflow: auto; height: 100%;"> -->
+        <div class="detail-container">
             <div style="padding: 0.5em; background: rgb(19, 35, 55); position: sticky; top: 0px; z-index: 1;">Query Details</div>
             <div style="padding: 0.5em;">
                 <div style="margin-bottom: 0.5em; display: flex; align-items: start; justify-content: space-between;">
@@ -246,7 +257,9 @@
             </div>
             <div style="background: rgb(19, 35, 55); padding: 0.5em; position: sticky; top: 0px; z-index: 1;">Actions</div>
             <div style="padding: 0.5em;">
-                <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(0, 107, 255); border: 0px; border-radius: 0.3em; color: white; padding: 0.5em; cursor: pointer;">Refetch</button> <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(255, 178, 0); border: 0px; border-radius: 0.3em; color: rgb(0, 0, 0); padding: 0.5em; cursor: pointer;">Invalidate</button> <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(63, 78, 96); border: 0px; border-radius: 0.3em; color: white; padding: 0.5em; cursor: pointer;">Reset</button> <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(255, 0, 133); border: 0px; border-radius: 0.3em; color: white; padding: 0.5em; cursor: pointer;">Remove</button></div><div style="background: rgb(19, 35, 55); padding: 0.5em; position: sticky; top: 0px; z-index: 1;">Data Explorer</div><div style="padding: 0.5em;"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(90deg);">▶</span> Data <span style="color: grey; font-size: 0.7em;">1 item</span></button><div style="margin-left: 0.1em; padding-left: 1em; border-left: 2px solid rgba(0, 0, 0, 0.15);"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">id:</span> <span style="color: rgb(255, 0, 133);">"83217f48-b9d8-4af5-ab59-90f93aacded6"</span></div></div></div></div><div style="background: rgb(19, 35, 55); padding: 0.5em; position: sticky; top: 0px; z-index: 1;">Query Explorer</div><div style="padding: 0.5em;"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(90deg);">▶</span> Query <span style="color: grey; font-size: 0.7em;">16 items</span></button><div style="margin-left: 0.1em; padding-left: 1em; border-left: 2px solid rgba(0, 0, 0, 0.15);"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">abortSignalConsumed:</span> <span style="color: rgb(255, 0, 133);">true</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">hadObservers:</span> <span style="color: rgb(255, 0, 133);">true</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">defaultOptions:</span> <span style="color: rgb(255, 0, 133);"></span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> options <span style="color: grey; font-size: 0.7em;">7 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">meta:</span> <span style="color: rgb(255, 0, 133);"></span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">cacheTime:</span> <span style="color: rgb(255, 0, 133);">600000</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> observers <span style="color: grey; font-size: 0.7em;">1 item</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> cache <span style="color: grey; font-size: 0.7em;">4 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(90deg);">▶</span> queryKey <span style="color: grey; font-size: 0.7em;">1 item</span></button><div style="margin-left: 0.1em; padding-left: 1em; border-left: 2px solid rgba(0, 0, 0, 0.15);"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">0:</span> <span style="color: rgb(255, 0, 133);">"/api/v1/report"</span></div></div></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">queryHash:</span> <span style="color: rgb(255, 0, 133);">"[\"/api/v1/report\"]"</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> initialState <span style="color: grey; font-size: 0.7em;">12 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> state <span style="color: grey; font-size: 0.7em;">12 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">gcTimeout:</span> <span style="color: rgb(255, 0, 133);"></span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> revertState <span style="color: grey; font-size: 0.7em;">12 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> retryer <span style="color: grey; font-size: 0.7em;">10 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">promise:</span> <span style="color: rgb(255, 0, 133);">{}</span></div></div></div></div></div>
+                <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(0, 107, 255); border: 0px; border-radius: 0.3em; color: white; padding: 0.5em; cursor: pointer;">Refetch</button> <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(255, 178, 0); border: 0px; border-radius: 0.3em; color: rgb(0, 0, 0); padding: 0.5em; cursor: pointer;">Invalidate</button> <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(63, 78, 96); border: 0px; border-radius: 0.3em; color: white; padding: 0.5em; cursor: pointer;">Reset</button> <button type="button" style="appearance: none; font-size: 0.9em; font-weight: bold; background: rgb(255, 0, 133); border: 0px; border-radius: 0.3em; color: white; padding: 0.5em; cursor: pointer;">Remove</button></div><div style="background: rgb(19, 35, 55); padding: 0.5em; position: sticky; top: 0px; z-index: 1;">Data Explorer</div><div style="padding: 0.5em;"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(90deg);">▶</span> Data <span style="color: grey; font-size: 0.7em;">1 item</span></button><div style="margin-left: 0.1em; padding-left: 1em; border-left: 2px solid rgba(0, 0, 0, 0.15);"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">id:</span> <span style="color: rgb(255, 0, 133);">"83217f48-b9d8-4af5-ab59-90f93aacded6"</span></div></div></div></div><div style="background: rgb(19, 35, 55); padding: 0.5em; position: sticky; top: 0px; z-index: 1;">Query Explorer</div><div style="padding: 0.5em;"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(90deg);">▶</span> Query <span style="color: grey; font-size: 0.7em;">16 items</span></button><div style="margin-left: 0.1em; padding-left: 1em; border-left: 2px solid rgba(0, 0, 0, 0.15);"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">abortSignalConsumed:</span> <span style="color: rgb(255, 0, 133);">true</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">hadObservers:</span> <span style="color: rgb(255, 0, 133);">true</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">defaultOptions:</span> <span style="color: rgb(255, 0, 133);"></span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> options <span style="color: grey; font-size: 0.7em;">7 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">meta:</span> <span style="color: rgb(255, 0, 133);"></span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">cacheTime:</span> <span style="color: rgb(255, 0, 133);">600000</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> observers <span style="color: grey; font-size: 0.7em;">1 item</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> cache <span style="color: grey; font-size: 0.7em;">4 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(90deg);">▶</span> queryKey <span style="color: grey; font-size: 0.7em;">1 item</span></button><div style="margin-left: 0.1em; padding-left: 1em; border-left: 2px solid rgba(0, 0, 0, 0.15);"><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">0:</span> <span style="color: rgb(255, 0, 133);">"/api/v1/report"</span></div></div></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">queryHash:</span> <span style="color: rgb(255, 0, 133);">"[\"/api/v1/report\"]"</span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> initialState <span style="color: grey; font-size: 0.7em;">12 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> state <span style="color: grey; font-size: 0.7em;">12 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">gcTimeout:</span> <span style="color: rgb(255, 0, 133);"></span></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> revertState <span style="color: grey; font-size: 0.7em;">12 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><button style="cursor: pointer; color: inherit; font: inherit; outline: inherit; background: transparent; border: none; padding: 0px;"><span style="display: inline-block; transition: all 0.1s ease 0s; transform: rotate(0deg);">▶</span> retryer <span style="color: grey; font-size: 0.7em;">10 items</span></button></div><div style="font-family: Menlo, monospace; font-size: 1em; line-height: 1.7; outline: none; word-break: break-word;"><span style="color: white;">promise:</span> <span style="color: rgb(255, 0, 133);">{}</span>
+            </div>
+        </div>
 
     </div>
 
