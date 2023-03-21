@@ -14,31 +14,9 @@
             word-break: break-word;
         }
 
-        .span-icon-button {
-            cursor: pointer; 
-            color: inherit; 
-            font: inherit; 
-            outline: inherit; 
-            background: transparent; 
-            border: none;    
-        }
 
-        .span-icon-collapsed {
-            display: inline-block; 
-            transition: all 0.1s ease 0s; 
-        }
 
-        .span-icon-expanded {
-            display: inline-block; 
-            transition: all 0.1s ease 0s; 
-            transform: rotate(90deg);
-        }
 
-        .child-span-container {
-            margin-left: 0.1em; 
-            padding-left: 1em; 
-            border-left: 2px solid rgba(0, 0, 0, 0.15);
-        }
         
         .span-text-small {
             color: grey; 
@@ -80,15 +58,7 @@
 
 
 
-        .report-span {
-            min-height: 2em; 
-            display: flex; 
-            /* margin-bottom: 2px;  */
-            background-color: rgb(11, 21, 33);
-            cursor: pointer;
-            flex-grow: 1;
-            border-bottom: 1px solid rgb(34, 46, 62); 
-        }
+
 
         .report-span-selected {
             height: 2em; 
@@ -101,11 +71,7 @@
 
 
 
-        .report-span-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
+
 
 
 
@@ -126,6 +92,57 @@
             flex-grow: 1;
             flex-basis: auto;
             padding: 2px;            
+        }
+
+        .report-span-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .report-span {
+            min-height: 2em; 
+            display: flex; 
+            /* margin-bottom: 2px;  */
+            background-color: rgb(11, 21, 33);
+            cursor: pointer;
+            flex-grow: 1;
+            border-bottom: 1px solid rgb(34, 46, 62); 
+        }
+
+        .child-span-container {
+            margin-left: 0.1em; 
+            padding-left: 1em; 
+            border-left: 2px solid rgba(0, 0, 0, 0.15);
+        }
+
+        
+        .span-icon-button {
+            cursor: pointer; 
+            color: inherit; 
+            font: inherit; 
+            outline: inherit; 
+            background: transparent; 
+            border: none;    
+        }
+
+        
+        .span-icon-collapsed {
+            display: inline-block; 
+            transition: all 0.1s ease 0s; 
+        }
+
+        .span-icon-expanded {
+            display: inline-block; 
+            transition: all 0.1s ease 0s; 
+            transform: rotate(90deg);
+        }
+
+        .table-button-text {
+            font-size: 0.9em; 
+            color: inherit; 
+            background: inherit; 
+            padding: 0.5em;
         }
 
         .detail-container { 
