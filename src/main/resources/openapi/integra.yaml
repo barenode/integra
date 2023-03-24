@@ -90,10 +90,12 @@ components:
       type: object
       required:
         - id
+        - rootSpanCount
       properties:
         id:
           type: string
-
+        rootSpanCount:
+          type: int
     Report:
       type: object
       required:
@@ -125,6 +127,9 @@ components:
           type: string
         label:
           type: string
+        timestamp:
+          type: string
+          format: date-time
         childSpans:
           type: array
           items:

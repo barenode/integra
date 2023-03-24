@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                height: 100vh;
+                width: 100vw;
+                font-size: clamp(12px, 1.5vw, 14px);
+                font-family: sans-serif; 
+                background-color: rgb(11, 21, 33);
+                color: white;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            .container {
+                display: flex;
+                height: 100%;
+                width: 100%;
+                background-color: red;
+            }
+
+            .section {
+                margin: 2px; 
+                flex: 1 1 500px; 
+                overflow: auto;
+                width: 100%;
+                background-color: green;
+            }
+
+            .content {
+                height: 5000px;                 
+                width: 100%;
+                background-color: blue;
+            }
+        </style>
+    </head>
+    <body>
+            <div class="container">
+                <div class="section">
+                    <div class="content">
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="content">
+                    </div>
+                </div>
+            </div>
+    </body>
+</html>

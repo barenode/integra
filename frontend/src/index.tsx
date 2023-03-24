@@ -5,6 +5,7 @@ import App from './component/App';
 import reportWebVitals from './reportWebVitals';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import Scroller from './component/Scroller';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -20,6 +21,7 @@ const queryClient = new QueryClient({
 
 root.render(
   <React.StrictMode>
+    {/* <Scroller /> */}
     <QueryClientProvider client={queryClient}>
       <App />
       <ReactQueryDevtools initialIsOpen={false} />

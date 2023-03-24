@@ -24,12 +24,10 @@ public class SplunkRecordAggregator {
 
     public void add(SplunkRecord.Result span) {
         ContainerType type = span.resolveContainerType();
-        log.info("add {} {} {} - {}", type, span.getIdent(), span.getMessage(), span.getTarget());
         switch (type) {
             case Other -> {
                 Container other = newContainer(type, span);
                 if (!requests.containsKey(span.getIdent())) {
-                    //throw new IllegalStateException("no parent for OTHER span: " + span);
                     if (!roots.containsKey(span.getSpanId())) {
                         roots.put(span.getSpanId(), other);
                     } else {
@@ -44,7 +42,7 @@ public class SplunkRecordAggregator {
                 Container requestContainer = newContainer(type, span);
                 List<Container> crs = clientRequests.stream()
                         .filter(c -> c.matchClientRequest(span)).collect(Collectors.toList());
-                if (crs.size() == 0) {
+                if (crs.isEmpty()) {
                     if (!roots.containsKey(span.getSpanId())) {
                         roots.put(span.getSpanId(), requestContainer);
                     } else {
@@ -54,19 +52,20 @@ public class SplunkRecordAggregator {
                     crs.get(0).addChild(requestContainer);
                 } else {
                     Container cr = crs.stream()
-                            .filter(c -> c.getChildren() == null || c.getChildren().isEmpty())
-                            .findFirst()
-                            .orElseThrow(IllegalStateException::new);
-                    cr.addChild(requestContainer);
+                        .filter(c -> c.getChildren() == null || c.getChildren().isEmpty())
+                        .findFirst()
+                        .orElse(null);   
+                    if (cr != null) {
+                        cr.addChild(requestContainer);
+                    } else {
+                        log.warn("DUPLICATE SPAN {} ", requestContainer);
+                        roots.put(span.getSpanId(), requestContainer);
+                    }                                             
                 }
-//                if (requests.containsKey(span.getIdent())) {
-//                    throw new IllegalStateException(String.format("Duplicate request %s", span.getIdent()));
-//                }
                 requests.put(span.getIdent(), requestContainer);
             }
             case ResponseSent -> {
                 if (!requests.containsKey(span.getIdent())) {
-                    //throw new IllegalStateException("no parent for request response: " + span);
                     log.warn("no parent for request response: " + span);
                 } else {
                     Container request = requests.get(span.getIdent());
@@ -90,7 +89,7 @@ public class SplunkRecordAggregator {
             }
             case ClientResponded -> {
                 List<Container> crs = clientRequests.stream()
-                        .filter(c -> c.matchClientResponse(span)).collect(Collectors.toList());
+                    .filter(c -> c.matchClientResponse(span)).collect(Collectors.toList());
                 if (crs.size() == 1) {
                     crs.get(0).setResponse(span);
                 } else {
@@ -99,9 +98,6 @@ public class SplunkRecordAggregator {
                             .findFirst()
                             .orElseThrow(IllegalStateException::new);
                     cr.setResponse(span);
-//                        throw new IllegalStateException(
-//                                String.format("Multiple client request found for response! Requests {}, response {}  ", span, crs)
-//                        );
                 }
             }
         }

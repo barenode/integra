@@ -1,10 +1,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import type { Span } from '../../model';    
-import SpanDetailComponent from '../SpanDetailComponent';
-import emptyImg from './img/empty.gif';
-import minusImg from './img/minus.gif';
-import plusImg from './img/plus.gif';
+import { useApplicationContext } from '../../context/applicationState';
 
 const ReportSpanContainer = styled.div`
     flex-grow: 1;
@@ -12,18 +9,18 @@ const ReportSpanContainer = styled.div`
     flex-direction: column;
 `;
 
-const ReportSpan = styled.div`
+const ReportSpan = styled.div<{selected: boolean}>`
     min-height: 2em; 
-    display: flex; 
-    //selected
-    // background-color: rgb(35, 44, 55);
+    display: flex;     
+    ${({ selected }) => selected && `
+        background-color: rgb(35, 44, 55);
+    `}
 
-    // error
-    background-color: rgb(255, 0, 133);
-    //error selected
-    //background-color: rgb(255, 26, 145);
-
-
+    // // error
+    // background-color: rgb(255, 0, 133);
+    // ${({ selected }) => selected && `
+    //     background-color: rgb(255, 26, 145);
+    // `}
 
     cursor: pointer;
     flex-grow: 1;
@@ -70,11 +67,6 @@ interface ILogComponentProps {
     span: Span;
 }
 
-interface ILogComponentState {
-    expanded: boolean;
-    open: boolean;
-}
-
 const LogComponent: React.FC<ILogComponentProps> = ({
     reportId,
     span
@@ -83,30 +75,29 @@ const LogComponent: React.FC<ILogComponentProps> = ({
         serviceName, 
         childSpans, 
         label,
-        traceId,
-        spanId,
-        id 
+        id,
+        timestamp 
     } = span;
     const hasChildSpan = childSpans?.length ? true : false;
-    const [state, setState] = React.useState<ILogComponentState>({expanded: false, open: false});
-    const { expanded, open } = state;
-    const expandCallback = React.useCallback(() => {
-        console.log('expand');
-        setState({ ...state, expanded: !expanded });
-    }, [ state, expanded ]);
-    const openCallback = React.useCallback(() => {
+    const { state, setState } = useApplicationContext();
+    const { selectedSpanId } = state;
+    const selected = selectedSpanId === id;
+    const [expanded, setExpanded] = React.useState<boolean>(false);    
+    const selectCallback = React.useCallback(() => {
         console.log('open');
-        setState({ ...state, open: !open });
-    }, [ state, open ]);
-    const expandIcon = hasChildSpan ? ( expanded ? minusImg : plusImg) : emptyImg;
+        setState({ ...state, selectedSpanId: id });
+    }, [ state ]);
     return (
         <ReportSpanContainer>
-            <ReportSpan> 
-                <ExpandButton onClick={(e) => { e.stopPropagation(); expandCallback(); }}>
+            <ReportSpan selected={selected} onClick={selectCallback}> 
+                <ExpandButton onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}>
                     {hasChildSpan && <>
                         {expanded ? <Expanded>▶</Expanded> : <Collapsed>▶</Collapsed> }</>
                     }
                 </ExpandButton>  
+                <Content>
+                    {timestamp}
+                </Content>   
                 <Content>
                     {serviceName}
                 </Content>   
@@ -116,7 +107,7 @@ const LogComponent: React.FC<ILogComponentProps> = ({
             </ReportSpan>
             {expanded &&
                 <ChildrenContainer>
-                    {childSpans?.map((childSpan) => <LogComponent reportId={reportId} span={childSpan} />)}
+                    {childSpans?.map((childSpan) => <LogComponent key={childSpan.id} reportId={reportId} span={childSpan} />)}
                 </ChildrenContainer>
             }
         </ReportSpanContainer>

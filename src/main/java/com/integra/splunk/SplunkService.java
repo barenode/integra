@@ -48,7 +48,7 @@ public class SplunkService {
             Stream<String> lines = reader.lines();
         ) {            
             String id = UUID.randomUUID().toString();
-            SplunkReport report = lines
+            SplunkReport report = lines 
                 .map(this::parseRecord)
                 .map(SplunkRecord::getResult)
                 .filter(r -> r.getTimestamp() != null)
@@ -63,8 +63,9 @@ public class SplunkService {
             getCache().put(id, report);
             ReportInfo result = ReportInfo.builder()
                 .id(id)
+                .rootSpanCount(report.getRoots().size())
                 .build();
-            log.info("Result: {}", result);
+            log.info("Result {}", result);
             return result;
         } catch (Exception e) {
             log.error("Error processing content: " + e.getMessage(), e);

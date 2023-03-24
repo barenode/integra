@@ -1,10 +1,49 @@
-html, body {
-	height: 100%;
+/* override browser default */
+html,
+body {
+  margin: 0;
+  padding: 0;
 }
 
+/* use viewport-relative units to cover page fully */
 body {
-	font-size: clamp(12px, 1.5vw, 14px);
-	font-family: sans-serif; 
-	background-color: rgb(11, 21, 33);
-	color: white;
+  height: 100vh;
+  width: 100vw;
+  font-size: clamp(12px, 1.5vw, 14px);
+  font-family: sans-serif; 
+  background-color: rgb(11, 21, 33);
+  color: white;
 }
+
+/* include border and padding in element width and height */
+* {
+  box-sizing: border-box;
+}
+
+code {
+  white-space: nowrap;
+}
+
+
+*::-webkit-scrollbar, scrollbar {
+  width: 1em;
+  height: 1em;
+}
+
+*::-webkit-scrollbar-thumb, scrollbar-thumb {
+  background: #3f4e60;
+  border-radius: 0.5em;
+  border: 3px solid #132337;
+}
+
+*::-webkit-scrollbar-track, scrollbar-track {
+  background: #132337;
+}
+
+/* full-sized  container that fills up the page */
+/* div {
+  height: 100%;
+  width: 100%;
+  font-size: 20px;
+  background-color: lightskyblue;
+} */

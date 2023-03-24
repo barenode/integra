@@ -2,7 +2,8 @@ import { createContext, useContext } from "react"
 import { ReportInfo } from "../model";
 
 export interface ApplicationState {
-    report?: ReportInfo;
+    report?: ReportInfo;    
+    selectedSpanId?: string;
 }
 
 export type ApplicationContextContent = {

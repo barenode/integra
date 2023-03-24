@@ -50,6 +50,7 @@ public class SplunkMapper {
             .serviceName(get(container, SplunkRecord.Result::getServiceName))
             .traceId(get(container, SplunkRecord.Result::getTraceId))
             .label(get(container, SplunkRecord.Result::getMessage))
+            .timestamp(get(container, SplunkRecord.Result::getTimestamp))
             .childSpans(Optional.ofNullable(container.getChildren()).orElse(Collections.emptyList())
                 .stream()
                 .map(this::mapSpan)

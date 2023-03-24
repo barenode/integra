@@ -14,5 +14,6 @@ export interface Span {
   httpStatus?: string;
   httpMethod?: string;
   label?: string;
+  timestamp?: string;
   childSpans?: Span[];
 }
