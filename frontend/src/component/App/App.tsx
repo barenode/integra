@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import ReportComponent from '../ReportComponent';
 import Upload from '../Upload';
 import { ApplicationContext, ApplicationState } from '../../context/applicationState';
+import Scroller from '../Scroller';
 
 const AppContainer = styled.div`
   display: flex;
@@ -17,7 +18,8 @@ function App() {
     <ApplicationContext.Provider value= {{ state, setState }}>
       <>
         {report ? 
-          <ReportComponent report={report} /> 
+          // <ReportComponent report={report} /> 
+          <Scroller report={report} /> 
           : 
           <Upload />
         }

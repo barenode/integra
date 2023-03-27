@@ -1,9 +1,17 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { useReadReport } from '../../api/api';
+import { ReportInfo } from '../../model';
+import LogComponent from '../LogComponent';
+import ContentContainer from './ContentContainer';
 
-const ITEM_HEIGHT = 20;
+const ITEM_HEIGHT = 28;
 const ITEM_COUNT = 2500;
-const HEIGHT = 500;
+const HEIGHT = 560;
+
+interface IScrollerProps {
+    report: ReportInfo;
+}
 
 const Container = styled.div`
     height: 100%;
@@ -18,24 +26,15 @@ const Envelope = styled.div<{ minHeight: number}>`
     ${({ minHeight }) => `min-height: ${minHeight}px;`}    
 `;
 
-const ContentContainer = styled.div<{ top: number; elementHeight: number; even: boolean;}>`
-    position: absolute;   
-    width: 100%; 
-    background-color: red;
-    border: 5px solid back;
-    // height: 400px;        
-    // top: 100px;
-    ${({ even }) => `background-color: ${even ? 'red' : 'green'};`}    
-    ${({ elementHeight }) => `height: ${elementHeight}px;`}    
-    ${({ top }) => `top: ${top}px;`}    
-`;
 
 const isEven = (value: number) => value % 2 === 0;
 
 const randomInt = (max: number) => Math.floor(Math.random() * max);
 
 
-const Scroller: React.FC = () => {
+const Scroller: React.FC<IScrollerProps> = ({
+    report: { id, rootSpanCount }
+}) => {
     const [even, setEven] = React.useState<number>(0);    
     const [odd, setOdd] = React.useState<number>(1);                 
 
@@ -61,16 +60,11 @@ const Scroller: React.FC = () => {
     );
 
     let evenElement = React.useMemo(() => (
-        <ContentContainer top={even * HEIGHT} elementHeight={HEIGHT} even={true} ref={evenContainerRef}>
-            <div onClick={() => console.log('click')} style={{backgroundColor: 'red', border: "5px solid black"}}>EVEN {even}</div>
-        </ContentContainer>
-    ), [even])
+        <ContentContainer id={id} page={even} pageSize={20} />
+    ), [even]);
     let oddElement = React.useMemo(() => (
-        <ContentContainer top={odd * HEIGHT} elementHeight={HEIGHT} even={false} ref={oddContainerRef}>
-            <div onClick={() => console.log('click')} style={{backgroundColor: 'green', border: "5px solid black"}}>ODD {odd}</div>
-        </ContentContainer>
-    ), [odd])
-
+        <ContentContainer id={id} page={odd} pageSize={20} />
+    ), [odd]);
 
     return (
         <Container className="container" onScroll={handleScroll}>

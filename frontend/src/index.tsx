@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
 
 root.render(
   <React.StrictMode>
-    {/* <Scroller /> */}
+    
     <QueryClientProvider client={queryClient}>
       <App />
       <ReactQueryDevtools initialIsOpen={false} />

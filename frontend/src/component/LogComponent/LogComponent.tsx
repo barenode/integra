@@ -21,7 +21,7 @@ const severityColorMap = {
 }
 
 const ReportSpan = styled.div<{selected: boolean; severity: Severity}>`
-    min-height: 2em; 
+    min-height: 28px; 
     display: flex;     
     ${({ severity }) => `
         background-color: ${severityColorMap[severity].background};
@@ -38,7 +38,7 @@ const ReportSpan = styled.div<{selected: boolean; severity: Severity}>`
 
     cursor: pointer;
     flex-grow: 1;
-    border-bottom: 1px solid rgb(34, 46, 62);  
+    // border-bottom: 1px solid rgb(34, 46, 62);  
 `;
 
 const ChildrenContainer = styled.div`
