@@ -5,6 +5,7 @@
  * This is ....
  * OpenAPI spec version: 1.0.11
  */
+import type { Severity } from './severity';
 
 export interface Span {
   id: string;
@@ -15,5 +16,6 @@ export interface Span {
   httpMethod?: string;
   label?: string;
   timestamp?: string;
+  severity?: Severity;
   childSpans?: Span[];
 }

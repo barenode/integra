@@ -1,6 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import type { Span } from '../../model';    
+import { Severity, Span } from '../../model';    
 import { useApplicationContext } from '../../context/applicationState';
 
 const ReportSpanContainer = styled.div`
@@ -9,11 +9,25 @@ const ReportSpanContainer = styled.div`
     flex-direction: column;
 `;
 
-const ReportSpan = styled.div<{selected: boolean}>`
+const severityColorMap = {
+    [Severity.info]: {
+        background: "rgb(11, 21, 33)",
+        selectedBackground: "rgb(35, 44, 55)"
+    },
+    [Severity.error]: {
+        background: "rgb(255, 0, 133)",
+        selectedBackground: "rgb(255, 26, 145)"
+    }
+}
+
+const ReportSpan = styled.div<{selected: boolean; severity: Severity}>`
     min-height: 2em; 
     display: flex;     
-    ${({ selected }) => selected && `
-        background-color: rgb(35, 44, 55);
+    ${({ severity }) => `
+        background-color: ${severityColorMap[severity].background};
+    `}
+    ${({ selected, severity }) => selected && `
+        background-color: ${severityColorMap[severity].selectedBackground};
     `}
 
     // // error
@@ -76,7 +90,8 @@ const LogComponent: React.FC<ILogComponentProps> = ({
         childSpans, 
         label,
         id,
-        timestamp 
+        timestamp,
+        severity 
     } = span;
     const hasChildSpan = childSpans?.length ? true : false;
     const { state, setState } = useApplicationContext();
@@ -89,7 +104,7 @@ const LogComponent: React.FC<ILogComponentProps> = ({
     }, [ state ]);
     return (
         <ReportSpanContainer>
-            <ReportSpan selected={selected} onClick={selectCallback}> 
+            <ReportSpan severity={severity || Severity.info} selected={selected} onClick={selectCallback}> 
                 <ExpandButton onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}>
                     {hasChildSpan && <>
                         {expanded ? <Expanded>▶</Expanded> : <Collapsed>▶</Collapsed> }</>

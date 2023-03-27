@@ -14,12 +14,14 @@ const ReportComponentContainer = styled.div`
     padding: 2px; 
     flex: 1 1 500px; 
     overflow: auto;
+    width: 100%;
 `;
 
 const SpanDetailContainer = styled.div`
     padding: 2px;   
     flex: 0 0 500px; 
     overflow: auto;
+    width: 100%;
 `;
 
 
@@ -34,13 +36,17 @@ const ReportComponent: React.FC<IReportComponentProps> = ({
     return (
         <>
             <ReportComponentContainer>
-                {spans?.map((span) => (
-                    <LogComponent key={id} reportId={id} span={span} />
-                ))}
+                <div>
+                    {spans?.map((span) => (
+                        <LogComponent key={id} reportId={id} span={span} />
+                    ))}
+                </div>
             </ReportComponentContainer>
             {selectedSpanId && (
                 <SpanDetailContainer>
-                    <SpanDetailComponent reportId={id} spanId={selectedSpanId} />
+                    <div>
+                        <SpanDetailComponent reportId={id} spanId={selectedSpanId} />
+                    </div>
                 </SpanDetailContainer>
             )}
         </>

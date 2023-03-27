@@ -96,6 +96,7 @@ components:
           type: string
         rootSpanCount:
           type: int
+
     Report:
       type: object
       required:
@@ -107,6 +108,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Span'
+    
+    Severity:
+      type: string
+      enum:
+        - info
+        - error
 
     Span:
       type: object
@@ -130,6 +137,8 @@ components:
         timestamp:
           type: string
           format: date-time
+        severity:
+          $ref: '#/components/schemas/Severity'
         childSpans:
           type: array
           items:

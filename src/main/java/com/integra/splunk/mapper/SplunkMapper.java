@@ -6,6 +6,7 @@ import com.integra.splunk.domain.SplunkRecord;
 import com.integra.splunk.domain.SplunkReport;
 import lombok.AllArgsConstructor;
 import org.openapitools.model.Report;
+import org.openapitools.model.Severity;
 import org.openapitools.model.Span;
 import org.openapitools.model.SpanDetail;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,9 @@ public class SplunkMapper {
     }
 
     private Span mapSpan(Container container) {
+        String httpStatus = get(container, SplunkRecord.Result::getHttpStatus);
+        Severity severity = httpStatus != null && !httpStatus.startsWith("2") ? Severity.ERROR : Severity.INFO;
+
         return Span.builder()
             .id(container.getId())
             .spanId(get(container, SplunkRecord.Result::getSpanId))
@@ -51,6 +55,7 @@ public class SplunkMapper {
             .traceId(get(container, SplunkRecord.Result::getTraceId))
             .label(get(container, SplunkRecord.Result::getMessage))
             .timestamp(get(container, SplunkRecord.Result::getTimestamp))
+            .severity(severity)
             .childSpans(Optional.ofNullable(container.getChildren()).orElse(Collections.emptyList())
                 .stream()
                 .map(this::mapSpan)

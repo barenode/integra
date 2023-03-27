@@ -6,6 +6,8 @@ import { ApplicationContext, ApplicationState } from '../../context/applicationS
 
 const AppContainer = styled.div`
   display: flex;
+  height: 100%;
+  width: 100%;
 `;
 
 function App() {
@@ -13,13 +15,13 @@ function App() {
   const { report } = state;
   return (
     <ApplicationContext.Provider value= {{ state, setState }}>
-      <AppContainer>
+      <>
         {report ? 
           <ReportComponent report={report} /> 
           : 
           <Upload />
         }
-      </AppContainer>
+      </>
     </ApplicationContext.Provider>
   )
 }
