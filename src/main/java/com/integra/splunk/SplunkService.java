@@ -78,6 +78,11 @@ public class SplunkService {
         return splunkMapper.mapReport(id, report);
     }
 
+    public Report readRange(String id, Integer startIndex, Integer endIndex) {
+        SplunkReport report = getCache().get(id, SplunkReport.class);        
+        return splunkMapper.mapReport(id, report, startIndex, endIndex);
+    }
+
     public SpanDetail readSpan(String id, String spanId) {
         SplunkReport report = getCache().get(id, SplunkReport.class);
         return splunkMapper.mapSpanDetail(report.getContainerMap().get(spanId));

@@ -21,6 +21,10 @@ public class ReportService {
         return splunkParserService.read(reportId);
     }
 
+    public Report readRange(String reportId, Integer startIndex, Integer endIndex) {
+        return splunkParserService.readRange(reportId, startIndex, endIndex);
+    }
+
     public SpanDetail readSpan(String reportId, String spanId) {
         return splunkParserService.readSpan(reportId, spanId);
     }

@@ -117,6 +117,57 @@ export const useReadReport = <TData = Awaited<ReturnType<typeof readReport>>, TE
 
 
 /**
+ * @summary Reads spans within given range
+ */
+export const readReportRange = (
+    reportId: string,
+    startIndex: string,
+    endIndex: string,
+ signal?: AbortSignal
+) => {
+      return customInstance<Report>(
+      {url: `/api/v1/report/${reportId}/spans/${startIndex}/${endIndex}`, method: 'get', signal
+    },
+      );
+    }
+  
+
+export const getReadReportRangeQueryKey = (reportId: string,
+    startIndex: string,
+    endIndex: string,) => [`/api/v1/report/${reportId}/spans/${startIndex}/${endIndex}`];
+
+    
+export type ReadReportRangeQueryResult = NonNullable<Awaited<ReturnType<typeof readReportRange>>>
+export type ReadReportRangeQueryError = ErrorType<unknown>
+
+export const useReadReportRange = <TData = Awaited<ReturnType<typeof readReportRange>>, TError = ErrorType<unknown>>(
+ reportId: string,
+    startIndex: string,
+    endIndex: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof readReportRange>>, TError, TData>, }
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getReadReportRangeQueryKey(reportId,startIndex,endIndex);
+
+  
+
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof readReportRange>>> = ({ signal }) => readReportRange(reportId,startIndex,endIndex, signal);
+
+
+  
+
+  const query = useQuery<Awaited<ReturnType<typeof readReportRange>>, TError, TData>(queryKey, queryFn, {enabled: !!(reportId && startIndex && endIndex), ...queryOptions}) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryKey;
+
+  return query;
+}
+
+
+/**
  * @summary Reads report span
  */
 export const readSpan = (

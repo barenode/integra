@@ -29,6 +29,15 @@ public class SplunkMapper {
             .build();
     }
 
+    public Report mapReport(String id, SplunkReport input, Integer startIndex, Integer endIndex) {
+        return Report.builder()
+            .id(id)
+            .spans(input.getRoots()
+                .subList(Math.min(startIndex, input.getRoots().size() - 1), Math.min(endIndex, input.getRoots().size() - 1))
+                .stream().map(this::mapSpan).collect(Collectors.toList()))
+            .build();
+    }
+
     public SpanDetail mapSpanDetail(Container container) {
         return SpanDetail.builder()
             .id(container.getId())

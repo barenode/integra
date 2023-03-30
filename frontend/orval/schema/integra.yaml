@@ -34,6 +34,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ReportInfo'
+                
 
   /api/v1/report/{reportId}:
     get:
@@ -55,6 +56,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Report'
+
+
+  /api/v1/report/{reportId}/spans/{startIndex}/{endIndex}:
+    get:
+      summary: Reads spans within given range
+      operationId: readReportRange
+      tags:
+        - report
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          description: The id of the report to retrieve
+          schema:
+            type: string
+        - name: startIndex
+          in: path
+          required: true
+          description: The start index
+          schema:
+            type: string
+        - name: endIndex
+          in: path
+          required: true
+          description: The end index
+          schema:
+            type: string        
+      responses:
+        '200':
+          description: return successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+
 
   /api/v1/report/{reportId}/span/{spanId}:
     get:
@@ -82,6 +118,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpanDetail'
+
 
 components:
   schemas:

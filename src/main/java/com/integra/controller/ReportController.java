@@ -68,6 +68,18 @@ public class ReportController implements ReportApi {
     }
 
     @Override
+    public Mono<ResponseEntity<Report>> readReportRange(
+        String reportId,
+        String startIndex, 
+        String endIndex,
+        ServerWebExchange exchange
+    ) {
+        return Mono.just(ResponseEntity.ok().body(
+            service.readRange(reportId, Integer.parseInt(startIndex), Integer.parseInt(endIndex))));
+    }
+    
+
+    @Override
     public Mono<ResponseEntity<SpanDetail>> readSpan(
         String reportId,
         String spanId,

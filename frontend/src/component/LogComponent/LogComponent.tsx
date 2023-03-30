@@ -99,7 +99,6 @@ const LogComponent: React.FC<ILogComponentProps> = ({
     const selected = selectedSpanId === id;
     const [expanded, setExpanded] = React.useState<boolean>(false);    
     const selectCallback = React.useCallback(() => {
-        console.log('open');
         setState({ ...state, selectedSpanId: id });
     }, [ state ]);
     return (
