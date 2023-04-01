@@ -95,16 +95,26 @@ const LogComponent: React.FC<ILogComponentProps> = ({
     } = span;
     const hasChildSpan = childSpans?.length ? true : false;
     const { state, setState } = useApplicationContext();
-    const { selectedSpanId } = state;
+    const { selectedSpanId, expandedSpanIds } = state;
     const selected = selectedSpanId === id;
-    const [expanded, setExpanded] = React.useState<boolean>(false);    
+    // const [expanded, setExpanded] = React.useState<boolean>(false);    
     const selectCallback = React.useCallback(() => {
         setState({ ...state, selectedSpanId: id });
+    }, [ state ]);
+    const expanded = expandedSpanIds.has(id);
+    const expandCallback = React.useCallback((value: boolean) => {
+        const expandedSpanIdsCopy = new Set<string>(expandedSpanIds);
+        if (value) {
+            expandedSpanIdsCopy.add(id);
+        } else {
+            expandedSpanIdsCopy.delete(id);
+        }
+        setState({ ...state, expandedSpanIds: expandedSpanIdsCopy });
     }, [ state ]);
     return (
         <ReportSpanContainer>
             <ReportSpan severity={severity || Severity.info} selected={selected} onClick={selectCallback}> 
-                <ExpandButton onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }}>
+                <ExpandButton onClick={(e) => { e.stopPropagation(); expandCallback(!expanded); }}>
                     {hasChildSpan && <>
                         {expanded ? <Expanded>▶</Expanded> : <Collapsed>▶</Collapsed> }</>
                     }

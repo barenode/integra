@@ -6,19 +6,21 @@ import LogComponent from '../LogComponent';
 
 interface IContentContainerProps {
     id: string;
-    page: number;
-    pageSize: number;
+    pageNumber: number;
+    startIndex: number;
+    endIndex: number;
+    top: number;
+    envelopeRef: React.RefObject<HTMLDivElement>;
+    innerRef: React.RefObject<HTMLDivElement>;
 }
 
 const ITEM_HEIGHT = 28;
 
-const Enevelope = styled.div<{ top: number; elementHeight: number;}>`
+const Enevelope = styled.div<{ elementHeight: number;}>`
     position: absolute;   
     width: 100%; 
-    background-color: red;
     border: 5px solid back;
-    ${({ elementHeight }) => `height: ${elementHeight}px;`}    
-    ${({ top }) => `top: ${top}px;`}    
+    ${({ elementHeight }) => `height: ${elementHeight}px;`}        
 `;
 
 const Inner = styled.div`
@@ -27,19 +29,30 @@ const Inner = styled.div`
 
 const ContentContainer: React.FC<IContentContainerProps> = ({
     id,
-    page,
-    pageSize
+    pageNumber,
+    startIndex,
+    endIndex,
+    top,
+    envelopeRef,
+    innerRef
 }) => {    
-    const startIndex = page * pageSize;
-    const endIndex = startIndex + pageSize;
-    const { state, setState } = useApplicationContext();
-    console.log(`rendering page ${page} translated to range ${startIndex}-${endIndex}`);
+
+    console.log(`rendering page ${pageNumber} with top ${top}`);
     const { data: report } = useReadReportRange(id, `${startIndex}`, `${endIndex}`);
     const { spans } = report || {}
+    
+    if (!spans) {
+        return null;
+    }
+
+    // const top = startIndex * ITEM_HEIGHT;
+    const height =  spans.length * ITEM_HEIGHT;
+    // console.log(`element starts at ${top}px with height ${height}px ends at ${top + height}px`);
+
     return (
-        <Enevelope top={page * (pageSize * ITEM_HEIGHT)} elementHeight={pageSize * ITEM_HEIGHT}>
-            <Inner>
-                {spans?.slice(0, pageSize).map((span) => (
+        <Enevelope ref={envelopeRef} style={{top: `${top}px`}} elementHeight={height} className="Enevelope">
+            <Inner ref={innerRef} className="Inner">
+                {spans.map((span) => (
                     <LogComponent key={span.id} reportId={id} span={span} />
                 ))}
             </Inner>

@@ -8,5 +8,5 @@
 
 export interface ReportInfo {
   id: string;
-  rootSpanCount: unknown;
+  rootSpanCount: number;
 }

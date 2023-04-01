@@ -12,7 +12,7 @@ const AppContainer = styled.div`
 `;
 
 function App() {
-  const [ state, setState ] = useState<ApplicationState>({}); 
+  const [ state, setState ] = useState<ApplicationState>({ expandedSpanIds: new Set<string>() }); 
   const { report } = state;
   return (
     <ApplicationContext.Provider value= {{ state, setState }}>

@@ -30,10 +30,13 @@ public class SplunkMapper {
     }
 
     public Report mapReport(String id, SplunkReport input, Integer startIndex, Integer endIndex) {
+        if (input.getRoots().isEmpty()) {
+            return mapReport(id, input);
+        }
         return Report.builder()
             .id(id)
             .spans(input.getRoots()
-                .subList(Math.min(startIndex, input.getRoots().size() - 1), Math.min(endIndex, input.getRoots().size() - 1))
+                .subList(Math.min(startIndex, input.getRoots().size() - 1), Math.min(endIndex, input.getRoots().size()))
                 .stream().map(this::mapSpan).collect(Collectors.toList()))
             .build();
     }

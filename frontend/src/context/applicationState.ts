@@ -4,6 +4,7 @@ import { ReportInfo } from "../model";
 export interface ApplicationState {
     report?: ReportInfo;    
     selectedSpanId?: string;
+    expandedSpanIds: Set<string>;
 }
 
 export type ApplicationContextContent = {
@@ -12,7 +13,7 @@ export type ApplicationContextContent = {
 }
 
 export const ApplicationContext = createContext<ApplicationContextContent>({
-    state: {},
+    state: { expandedSpanIds: new Set<string>() },
     setState: () => {}
 });
 

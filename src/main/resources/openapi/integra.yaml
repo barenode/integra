@@ -132,7 +132,7 @@ components:
         id:
           type: string
         rootSpanCount:
-          type: int
+          type: integer
 
     Report:
       type: object
