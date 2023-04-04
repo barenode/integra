@@ -5,6 +5,7 @@ import LogComponent from '../LogComponent';
 import { useReadReport } from '../../api/api'
 import { useApplicationContext } from '../../context/applicationState';
 import SpanDetailComponent from '../SpanDetailComponent';
+import Scroller from '../Scroller';
 
 interface IReportComponentProps {
     report: ReportInfo;
@@ -27,21 +28,24 @@ const SpanDetailContainer = styled.div`
 
 
 const ReportComponent: React.FC<IReportComponentProps> = ({
-    report: { id }
+    report
 }) => {
-    const { data: report } = useReadReport(id)
-    const { spans } = report || {}
+    // const { data: report } = useReadReport(id)
+    // const { spans } = report || {}
+    const { id } = report;
     const { state: { selectedSpanId }} = useApplicationContext();
+    
 
     return (
         <>
-            <ReportComponentContainer>
+            {/* <ReportComponentContainer>
                 <div>
                     {spans?.map((span) => (
                         <LogComponent key={id} reportId={id} span={span} />
                     ))}
                 </div>
-            </ReportComponentContainer>
+            </ReportComponentContainer> */}
+            {report && <Scroller report={report} />}
             {selectedSpanId && (
                 <SpanDetailContainer>
                     <div>

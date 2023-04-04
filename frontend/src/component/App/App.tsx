@@ -18,8 +18,8 @@ function App() {
     <ApplicationContext.Provider value= {{ state, setState }}>
       <>
         {report ? 
-          // <ReportComponent report={report} /> 
-          <Scroller report={report} /> 
+          <ReportComponent report={report} /> 
+          // <Scroller report={report} /> 
           : 
           <Upload />
         }

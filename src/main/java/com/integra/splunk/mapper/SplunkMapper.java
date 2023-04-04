@@ -33,10 +33,16 @@ public class SplunkMapper {
         if (input.getRoots().isEmpty()) {
             return mapReport(id, input);
         }
+        if (startIndex > input.getRoots().size()) {
+            return Report.builder()
+                .id(id)
+                .spans(Collections.emptyList())
+                .build();
+        }
         return Report.builder()
             .id(id)
             .spans(input.getRoots()
-                .subList(Math.min(startIndex, input.getRoots().size() - 1), Math.min(endIndex, input.getRoots().size()))
+                .subList(startIndex, Math.min(endIndex, input.getRoots().size()))
                 .stream().map(this::mapSpan).collect(Collectors.toList()))
             .build();
     }

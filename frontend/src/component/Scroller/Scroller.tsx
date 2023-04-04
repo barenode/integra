@@ -15,6 +15,7 @@ interface IScrollerProps {
 }
 
 const Container = styled.div`
+    flex: 1 1 500px; 
     height: 100%;
     width: 100%;
     overflow: auto;
@@ -30,13 +31,14 @@ const getCurrentIndex = (scrollTop: number, pageCount: number, heights: Map<numb
     let value = scrollTop;
     for (let i = 0; i < pageCount; i++) {
         const pageHeight = heights.get(i) || HEIGHT;
-        if (value - pageHeight < 0) {
-            // console.log(`index for scroll ${scrollTop} is ${i}`);
+        console.log(`index for scroll ${value} page ${i} height ${pageHeight}`);
+        if (value - pageHeight < 0) {            
             return i;    
         }
         value -= pageHeight;
     }
-    throw new Error(`Unable to compute current page index`);
+    return 0;
+    // throw new Error(`Unable to compute current page index`);
 }
 
 const getPageTop = (pageNumber: number, heights: Map<number, number>) => {
@@ -67,7 +69,11 @@ const Scroller: React.FC<IScrollerProps> = ({
 }) => {
     const pageCount = React.useMemo(() => {
         let res = Math.floor(rootSpanCount / PAGE_SIZE); 
-        return res;
+        if (res === 0) {
+            return 1;
+        } else {
+            return res;
+        }        
     }, []);            
 
     // console.log(`span count ${rootSpanCount}`);
@@ -127,16 +133,16 @@ const Scroller: React.FC<IScrollerProps> = ({
     const handleScroll = (e: any) => {
         let scrollTop = e.currentTarget.scrollTop;
         let currentIndex = getCurrentIndex(scrollTop, pageCount, heights);
-
+        console.log(`currentIndex ${currentIndex}`);
         // const currentIndex = Math.min(pageCount, Math.floor(scrollTop / HEIGHT));
         if (isEven(currentIndex)) {
             setEven(currentIndex);
-            if (currentIndex + 1<pageCount){
+            if (currentIndex + 1 < pageCount) {
                 setOdd(currentIndex + 1);   
             }  
         } else {
             setOdd(currentIndex);
-            if (currentIndex + 1<pageCount){
+            if (currentIndex + 1 < pageCount) {
                 setEven(currentIndex + 1);  
             }   
         }
